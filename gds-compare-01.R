@@ -5,6 +5,11 @@
 
 rm(list = ls())
 
+# TODO: For second comparison
+# Don't output TRUE/FALSE matrix, rather, for every cell that differs, replace 
+# scores with an NA, and write this to a CV file. Can then format all NA rows 
+# to be colored to highlight need for attention.
+
 ################################################################################
 # Before reading in tm scores, need to drop all rows that aren't the 
 # 4-point scale code (using just column names from JO scoresheet)

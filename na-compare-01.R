@@ -5,11 +5,6 @@
 
 rm(list = ls())
 
-# TODO: For second comparison
-# Don't output TRUE/FALSE matrix, rather, for every cell that differs, replace 
-# scores with an NA, and write this to a CV file. Can then format all NA rows 
-# to be colored to highlight need for attention.
-
 ################################################################################
 # Before reading in tm scores, need to drop all rows that aren't the 
 # 4-point scale code (using just column names from JO scoresheet)
@@ -36,6 +31,10 @@ score.cols <- c(4:ncol(tm.scores))
 # Create a data frame that will hold results of comparison
 comparisons <- tm.scores
 comparisons[, score.cols] <- tm.scores[, score.cols] == jo.scores[, score.cols]
+
+# # Finally, use those comparisons to replace differing scores with NA
+# tm.scores.diff <- tm.scores[, score.cols]
+# tm.scores.diff[, score.cols]
 
 # Send to a CSV file that we can use for re-checking
 write.csv(x = comparisons, file = "output/na-comparisons-01.csv", row.names = FALSE)

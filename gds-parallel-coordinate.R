@@ -53,7 +53,7 @@ gds.long$area <- factor(x = gds.long$area, levels = area.order)
 
 ggplot(data = gds.long, mapping = aes(x = area, y = score,
                                       group = inst.prog, color = Institution)) +
-  geom_line(position = position_dodge(width = 0.5), size = 0.5) +
+  geom_line(position = position_dodge(width = 0.5), size = 0.25) +
   geom_point(position = position_dodge(width = 0.5), size = 1.6) +
   # Jitter for vertical axis won't work with two geoms because each has it's own
   # random vertical offset

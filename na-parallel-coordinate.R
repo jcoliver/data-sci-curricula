@@ -9,9 +9,11 @@ rm(list = ls())
 library(ggplot2)
 library(tidyr)
 library(dplyr)
+library(RColorBrewer)
 
-na.scores <- read.csv(file = "data/na-scores.csv")
+na.scores <- read.csv(file = "data/na-scores.csv", stringsAsFactors = FALSE)
 na.areas <- read.csv(file = "data/na-areas-key.csv", stringsAsFactors = FALSE)
+inst.names <- read.csv(file = "data/institution-names.csv", stringsAsFactors = FALSE)
 
 # Need to calculate means for "Areas" from all contained "Subareas"
 for (area in unique(x = na.areas$Area)) {
@@ -34,6 +36,15 @@ na.scores <- na.scores[, -which(colnames(na.scores) %in% drop.cols)]
 
 # Remove NA rows (i.e. UA B.S.)
 na.scores <- na.omit(na.scores)
+rownames(na.scores) <- NULL
+
+# Replace institution with shorter names for plotting
+for (inst in na.scores$Institution) {
+  short.name <- inst.names$Short.name[inst.names$Institution == inst]
+  na.scores$Institution <- gsub(pattern = inst,
+                                replacement = short.name,
+                                x = na.scores$Institution)
+}
 
 # Create column that is Institution X Program
 na.scores$inst.prog <- paste0(na.scores$Institution, 
@@ -45,7 +56,7 @@ na.long <- na.scores %>%
          value = "score",
          -Institution, -Program, -inst.prog)
 
-# Drop the prefix "NA."
+# Drop the prefix "NA." from area names
 na.long$area <- gsub(pattern = "NA.", replacement = "", x = na.long$area)
 
 # Change some names for easier plotting
@@ -75,7 +86,7 @@ na.long$area <- gsub(pattern = " teamwork",
                      replacement = "\n& teamwork", 
                      x = na.long$area)
 na.long$area <- gsub(pattern = "Domain",
-                     replacement = "Domain-specific", 
+                     replacement = "Domain-specific\neducation", 
                      x = na.long$area)
 
 # Relevel areas by scores
@@ -85,12 +96,18 @@ area.means <- na.long %>%
 area.order <- area.means$area[order(area.means$mean, decreasing = TRUE)]
 na.long$area <- factor(x = na.long$area, levels = area.order)
 
+getPalette <- colorRampPalette(brewer.pal(9, "Set1"))
+
 ggplot(data = na.long, mapping = aes(x = area, y = score,
                                       group = inst.prog, color = Institution)) +
   geom_line(size = 0.25) +
   geom_point(size = 1.6) +
+  # geom_line(position = position_dodge(width = 0.5), size = 0.25) +
+  # geom_point(position = position_dodge(width = 0.5), size = 1.6) +
+  scale_color_manual(values = getPalette(length(unique(na.long$Institution)))) +
   xlab(label = "Key Concept") +
   ylab(label = "Score") + 
+  ggtitle(label = "National Academies' framework") +
   theme_bw() +
-  theme(legend.position = "none",
-        axis.text.x = element_text(angle = 50, vjust = 0.5))
+  theme(axis.text.x = element_text(angle = 50, vjust = 0.5))
+ggsave(filename = "output/na-scores-parallel.pdf")

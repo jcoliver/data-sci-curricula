@@ -1,4 +1,4 @@
-# Parallel coordinate plot with preliminary GDS data
+# Parallel coordinate plot with National Academies' framework scores
 # Jeff Oliver
 # jcoliver@email.arizona.edu
 # 2019-05-08
@@ -6,105 +6,106 @@
 rm(list = ls())
 
 ################################################################################
-library(ggplot2)
-library(tidyr)
-library(dplyr)
+library(tidyverse)
 library(RColorBrewer)
 
-na.scores <- read.csv(file = "data/na-scores.csv", stringsAsFactors = FALSE)
-na.areas <- read.csv(file = "data/na-areas-key.csv", stringsAsFactors = FALSE)
+scores <- read.csv(file = "data/na-scores.csv", stringsAsFactors = FALSE)
+areas <- read.csv(file = "data/na-areas-key.csv", stringsAsFactors = FALSE)
 inst.names <- read.csv(file = "data/institution-names.csv", stringsAsFactors = FALSE)
 
 # Need to calculate means for "Areas" from all contained "Subareas"
-for (area in unique(x = na.areas$Area)) {
+for (area in unique(x = areas$Area)) {
   # Look at one Area
-  area.key <- na.areas$Key[na.areas$Area == area & na.areas$Status == "Area"]
+  area.key <- areas$Key[areas$Area == area & areas$Status == "Area"]
   # Use Subarea to identify column names for calculating mean
-  subarea.keys <- na.areas$Key[na.areas$Area == area & na.areas$Status == "Subarea"]
+  subarea.keys <- areas$Key[areas$Area == area & areas$Status == "Subarea"]
   # Catch situation when Area has only one Subarea (Domain)
   if (length(subarea.keys) > 1) {
-    na.scores[, area.key] <- rowMeans(x = na.scores[, subarea.keys])
+    scores[, area.key] <- rowMeans(x = scores[, subarea.keys])
   } else {
-    na.scores[, area.key] <- na.scores[, subarea.keys]
+    scores[, area.key] <- scores[, subarea.keys]
   }
 }
 
 # Now extract only those columns that have means
-drop.cols <- na.areas$Key[na.areas$Status == "Subarea"]
+drop.cols <- areas$Key[areas$Status == "Subarea"]
 drop.cols <- c(drop.cols, "Row.Type")
-na.scores <- na.scores[, -which(colnames(na.scores) %in% drop.cols)]
+scores <- scores[, -which(colnames(scores) %in% drop.cols)]
 
 # Remove NA rows (i.e. UA B.S.)
-na.scores <- na.omit(na.scores)
-rownames(na.scores) <- NULL
+scores <- na.omit(scores)
+rownames(scores) <- NULL
 
 # Replace institution with shorter names for plotting
-for (inst in na.scores$Institution) {
+for (inst in scores$Institution) {
   short.name <- inst.names$Short.name[inst.names$Institution == inst]
-  na.scores$Institution <- gsub(pattern = inst,
+  scores$Institution <- gsub(pattern = inst,
                                 replacement = short.name,
-                                x = na.scores$Institution)
+                                x = scores$Institution)
 }
 
 # Create column that is Institution X Program
-na.scores$inst.prog <- paste0(na.scores$Institution, 
-                              na.scores$Program)
+scores$inst.prog <- paste0(scores$Institution, 
+                              scores$Program)
 
 # Convert to long for ease of plotting
-na.long <- na.scores %>%
+scores.long <- scores %>%
   gather(key = "area",
          value = "score",
          -Institution, -Program, -inst.prog)
 
 # Drop the prefix "NA." from area names
-na.long$area <- gsub(pattern = "NA.", replacement = "", x = na.long$area)
+scores.long$area <- gsub(pattern = "NA.", replacement = "", x = scores.long$area)
 
 # Change some names for easier plotting
-na.long$area <- gsub(pattern = "\\.", replacement = " ", x = na.long$area)
-na.long$area <- gsub(pattern = "Math foundations", 
+scores.long$area <- gsub(pattern = "\\.", replacement = " ", x = scores.long$area)
+scores.long$area <- gsub(pattern = "Math foundations", 
                      replacement = "Mathematical\nfoundations",
-                     x = na.long$area)
-na.long$area <- gsub(pattern = "Compute foundations", 
+                     x = scores.long$area)
+scores.long$area <- gsub(pattern = "Compute foundations", 
                      replacement = "Computational\nfoundations",
-                     x = na.long$area)
-na.long$area <- gsub(pattern = "Statistics foundations", 
+                     x = scores.long$area)
+scores.long$area <- gsub(pattern = "Statistics foundations", 
                      replacement = "Statistical\nfoundations",
-                     x = na.long$area)
-na.long$area <- gsub(pattern = "management curation", 
+                     x = scores.long$area)
+scores.long$area <- gsub(pattern = "management curation", 
                      replacement = "management\n& curation",
-                     x = na.long$area)
-na.long$area <- gsub(pattern = "description visualization",
+                     x = scores.long$area)
+scores.long$area <- gsub(pattern = "description visualization",
                      replacement = "description\n& visualization", 
-                     x = na.long$area)
-na.long$area <- gsub(pattern = "modeling assessment",
+                     x = scores.long$area)
+scores.long$area <- gsub(pattern = "modeling assessment",
                      replacement = "modeling\n& assessment", 
-                     x = na.long$area)
-na.long$area <- gsub(pattern = "Workflow reproducibility",
+                     x = scores.long$area)
+scores.long$area <- gsub(pattern = "Workflow reproducibility",
                      replacement = "Reproducibility", 
-                     x = na.long$area)
-na.long$area <- gsub(pattern = " teamwork",
+                     x = scores.long$area)
+scores.long$area <- gsub(pattern = " teamwork",
                      replacement = "\n& teamwork", 
-                     x = na.long$area)
-na.long$area <- gsub(pattern = "Domain",
+                     x = scores.long$area)
+scores.long$area <- gsub(pattern = "Domain",
                      replacement = "Domain-specific\neducation", 
-                     x = na.long$area)
+                     x = scores.long$area)
 
 # Relevel areas by scores
-area.means <- na.long %>%
+area.means <- scores.long %>%
   group_by(area) %>%
-  summarize(mean = mean(score, na.rm = TRUE))
+  summarize(mean = mean(score, na.rm = TRUE),
+            sterr = sd(score, na.rm = TRUE)/sqrt(n()))
 area.order <- area.means$area[order(area.means$mean, decreasing = TRUE)]
-na.long$area <- factor(x = na.long$area, levels = area.order)
+scores.long$area <- factor(x = scores.long$area, levels = area.order)
 
 getPalette <- colorRampPalette(brewer.pal(9, "Set1"))
 
-ggplot(data = na.long, mapping = aes(x = area, y = score,
-                                      group = inst.prog, color = Institution)) +
-  geom_line(size = 0.25) +
-  geom_point(size = 1.6) +
-  # geom_line(position = position_dodge(width = 0.5), size = 0.25) +
-  # geom_point(position = position_dodge(width = 0.5), size = 1.6) +
-  scale_color_manual(values = getPalette(length(unique(na.long$Institution)))) +
+ggplot(data = scores.long, mapping = aes(x = area)) +
+  geom_line(size = 0.5, alpha = 0.8, mapping = aes(y = score, 
+                                      color = Institution, 
+                                      group = inst.prog)) +
+  geom_point(data = area.means, mapping = aes(y = mean)) +
+  geom_errorbar(data = area.means, mapping = aes(ymin = (mean - sterr),
+                                                 ymax = (mean + sterr)),
+                width = 0.2) +
+  scale_color_manual(values = getPalette(length(unique(scores.long$Institution)))) +
   xlab(label = "Key Concept") +
   ylab(label = "Score") + 
   ggtitle(label = "National Academies' framework") +

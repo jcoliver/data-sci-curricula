@@ -10,8 +10,10 @@ library(tidyverse)
 library(RColorBrewer)
 
 scores <- read.csv(file = "data/na-scores.csv", stringsAsFactors = FALSE)
-areas <- read.csv(file = "data/na-areas-key.csv", stringsAsFactors = FALSE)
 inst.names <- read.csv(file = "data/institution-names.csv", stringsAsFactors = FALSE)
+scores <- merge(x = scores, y = inst.names)
+
+areas <- read.csv(file = "data/na-areas-key.csv", stringsAsFactors = FALSE)
 
 # Need to calculate means for "Areas" from all contained "Subareas"
 for (area in unique(x = areas$Area)) {
@@ -36,23 +38,16 @@ scores <- scores[, -which(colnames(scores) %in% drop.cols)]
 scores <- na.omit(scores)
 rownames(scores) <- NULL
 
-# Replace institution with shorter names for plotting
-for (inst in scores$Institution) {
-  short.name <- inst.names$Short.name[inst.names$Institution == inst]
-  scores$Institution <- gsub(pattern = inst,
-                                replacement = short.name,
-                                x = scores$Institution)
-}
-
 # Create column that is Institution X Program
-scores$inst.prog <- paste0(scores$Institution, 
-                              scores$Program)
+scores$inst.prog <- paste0(scores$Short.name,
+                           " - ", 
+                           scores$Program)
 
 # Convert to long for ease of plotting
 scores.long <- scores %>%
   gather(key = "area",
          value = "score",
-         -Institution, -Program, -inst.prog)
+         -Institution, -Program, -Short.name, -inst.prog)
 
 # Drop the prefix "NA." from area names
 scores.long$area <- gsub(pattern = "NA.", replacement = "", x = scores.long$area)
@@ -98,14 +93,15 @@ scores.long$area <- factor(x = scores.long$area, levels = area.order)
 getPalette <- colorRampPalette(brewer.pal(9, "Set1"))
 
 ggplot(data = scores.long, mapping = aes(x = area)) +
-  geom_line(size = 0.5, alpha = 0.8, mapping = aes(y = score, 
-                                      color = Institution, 
+  geom_line(size = 0.5, alpha = 0.7, mapping = aes(y = score, 
+                                      color = Short.name, 
                                       group = inst.prog)) +
   geom_point(data = area.means, mapping = aes(y = mean)) +
   geom_errorbar(data = area.means, mapping = aes(ymin = (mean - sterr),
                                                  ymax = (mean + sterr)),
                 width = 0.2) +
-  scale_color_manual(values = getPalette(length(unique(scores.long$Institution)))) +
+  scale_color_manual(values = getPalette(length(unique(scores.long$Short.name))),
+                     name = "Institution") +
   xlab(label = "Key Concept") +
   ylab(label = "Score") + 
   ggtitle(label = "National Academies' framework") +

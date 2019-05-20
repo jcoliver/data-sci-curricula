@@ -107,4 +107,4 @@ ggplot(data = scores.long, mapping = aes(x = area)) +
   ggtitle(label = "National Academies' framework") +
   theme_bw() +
   theme(axis.text.x = element_text(angle = 50, vjust = 0.5))
-ggsave(filename = "output/na-scores-parallel.pdf")
+ggsave(filename = "output/figure-scores-parallel-na.pdf")

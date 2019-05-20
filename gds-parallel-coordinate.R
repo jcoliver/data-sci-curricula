@@ -76,4 +76,4 @@ ggplot(data = scores.long, mapping = aes(x = area)) +
   ggtitle(label = "Greater Data Science framework") +
   theme_bw() +
   theme(axis.text.x = element_text(angle = 50, vjust = 0.5))
-ggsave(filename = "output/gds-scores-parallel.pdf")
+ggsave(filename = "output/figure-scores-parallel-gds.pdf")

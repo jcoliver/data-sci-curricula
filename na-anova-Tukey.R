@@ -56,7 +56,51 @@ if (area.significant) {
 # If ANOVA was significant, run Tukey post-hoc test on pairwise comparisons
 if (area.significant) {
   scores.tukey <- TukeyHSD(x = scores.aov, ordered = TRUE)[[1]]
+  scores.tukey <- data.frame(scores.tukey)
+  scores.tukey$comparison <- rownames(scores.tukey)
+  rownames(scores.tukey) <- NULL
+  # Some data wrangling to make it easier to visualize; splitting comparison
+  # Into separate columns
+  scores.tukey[, c((ncol(scores.tukey) + 1):(ncol(scores.tukey) + 2))] <-
+    str_split_fixed(string = scores.tukey$comparison, pattern = "-", n = 2)
+  colnames(scores.tukey)[(ncol(scores.tukey) - 1):ncol(scores.tukey)]<-
+    c("Area1", "Area2")
+
+  # Would like a means of quickly assessing which areas are significantly 
+  # different from others, a la the a, b, c convention, e.g.
+  # Area                 A  B  C
+  # Ethics               A
+  # Domain                  B  
+  # Math.foundations           C
+  # Compute.foundations        C
+  
+  # Creating a matrix of p-values. Not sure this is the way to do it...
+  p.matrix <- spread(data = scores.tukey[, c("Area1", "Area2", "p.adj")], 
+                     key = Area2, 
+                     value = "p.adj")
+  rownames(p.matrix) <- p.matrix[, 1]
+  p.matrix <- p.matrix[, -1]
+  
+  for (area1 in rownames(p.matrix)) {
+    for (area2 in colnames(p.matrix)) {
+      if (length(p.matrix[area2, area1]) > 0 & length(p.matrix[area1, area2]) > 0) {
+        if (is.na(p.matrix[area2, area1])) {
+          p.matrix[area2, area1] <- p.matrix[area1, area2]
+        }
+      }
+    }
+  }
+  
+
+  for (area1 in unique(scores.tukey$Area1)) {
+    
+  }
+  
+  # Is this necessary?
+  # Sort the Areas by decreasing mean score
+  area.means <- scores.long %>%
+    group_by(area) %>%
+    summarise(area.mean = mean(score)) %>%
+    arrange(desc(area.mean))
 }
 
-# Would like a means of quickly assessing which areas are significantly 
-# different from others

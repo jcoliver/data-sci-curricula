@@ -1,22 +1,21 @@
-# ANOVA and Tukey post-hoc tests on National Academies' framework
+# ANOVA and Tukey post-hoc tests on Greater Data Science framework
 # Jeff Oliver
 # jcoliver@email.arizona.edu
-# 2019-06-07
+# 2019-06-12
 
 rm(list = ls())
 
 # TODO: running tests on means (of each institution/program); going to want to 
-# check this. May need to weight based on number of sub-areas used in 
-# calculating area mean
+# check this
 
 ################################################################################
 library(tidyverse)
 source(file = "functions/area_scores.R")
 
-scores <- read.csv(file = "data/na-scores.csv", stringsAsFactors = FALSE)
+scores <- read.csv(file = "data/gds-scores.csv", stringsAsFactors = FALSE)
 inst.names <- read.csv(file = "data/institution-names.csv", stringsAsFactors = FALSE)
-areas <- read.csv(file = "data/na-areas-key.csv", stringsAsFactors = FALSE)
-area.prefix <- "NA."
+areas <- read.csv(file = "data/gds-areas-key.csv", stringsAsFactors = FALSE)
+area.prefix <- "GDS."
 
 # Calculate mean of each Area, based on scores of Subareas
 scores <- area_scores(scores = scores, areas = areas)
@@ -62,61 +61,14 @@ if (area.significant) {
   scores.tukey <- data.frame(scores.tukey)
   scores.tukey$comparison <- rownames(scores.tukey)
   rownames(scores.tukey) <- NULL
-  
   # Some data wrangling to make it easier to visualize; splitting comparison
-  # into separate columns
+  # Into separate columns
   scores.tukey[, c((ncol(scores.tukey) + 1):(ncol(scores.tukey) + 2))] <-
     str_split_fixed(string = scores.tukey$comparison, pattern = "-", n = 2)
   colnames(scores.tukey)[(ncol(scores.tukey) - 1):ncol(scores.tukey)]<-
     c("Area1", "Area2")
 
-  # Would like a means of quickly assessing which areas are significantly 
-  # different from others, a la the a, b, c convention, e.g.
-  # Area                 A  B  C
-  # Ethics               A
-  # Domain                  B  
-  # Math.foundations           C
-  # Compute.foundations        C
-
-  # Get means for ease of extracting information
-  scores.means <- scores.long %>%
-    group_by(area) %>%
-    summarize(mean.score = mean(score)) %>%
-    arrange(desc(mean.score))
-  
-  # keeps track of which letter we are on
-  letter.index <- 1
-  ns.previous <- NULL
-  for (i in 1:length(scores.means$area)) {
-    area <- scores.means$area[i]
-    # Pull out only comparisons for current area
-    comparisons <- scores.tukey[scores.tukey$Area1 == area | 
-                                  scores.tukey$Area2 == area, ]
-    # Restrict to those comparisons that are not significant
-    ns.comparisons <- comparisons[comparisons$p.adj >= 0.05, ]
-    
-    # Make a vector of the area names for all n.s. comparisons
-    ns.names <- c(ns.comparisons$Area1, ns.comparisons$Area2)
-    # The current set of areas that are not significantly different
-    ns.set <- unique(ns.names)
-    new.set <- FALSE
-    if (!is.null(ns.previous)) {
-      if (!setequal(x = ns.set, y = ns.previous)) {
-        new.set <- TRUE
-      }
-    } else {
-      new.set <- TRUE
-    }
-    
-    # This is a new set, so need to make new column and fill it in
-    if (new.set) {
-      scores.means[, LETTERS[letter.index]] <- FALSE
-      scores.means[scores.means$area %in% ns.set, LETTERS[letter.index]] <- TRUE
-      letter.index <- letter.index + 1
-    }
-    
-    # Use ns.previous for next iteration of loop
-    ns.previous <- ns.set
-  }
+} else {
+  message("Omnibus ANOVA not significant; no post-hoc comparisons made.")
 }
 

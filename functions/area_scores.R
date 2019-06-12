@@ -1,9 +1,9 @@
-#' Calculates mean score for each area of National Academies' framework
+#' Calculates mean score for each area of a given framework
 #' 
 #' @param scores     data frame with institution/program scores
-#' @param areas      data frame with area taxonomy for National Academies'
-#' @return data frame with average scores for each area in National Academies' 
-#'         framework.
+#' @param areas      data frame with area taxonomy for National Academies' or 
+#'                   GDS framework
+#' @return data frame with average scores for each area in given framework.
 area_scores <- function(scores, areas) {
   # Iterate over all areas
   for (area in unique(x = areas$Area)) {

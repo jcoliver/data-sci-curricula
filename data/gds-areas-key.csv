@@ -1,0 +1,11 @@
+Area,Key,Status,Description
+Literacy,GDS.Data.literacy,Area,"Data gathering, preparation, and exploration"
+Representation,GDS.Data.representation.modeling,Area,Data representation and transformation
+Representation,GDS.Databases,Subarea,Modern databases
+Representation,GDS.Math,Subarea,Mathematical representations
+Computing,GDS.Compute,Area,Computing with data
+Modeling,GDS.Data.modeling,Area,Data modeling
+Modeling,GDS.Generative.Modeling,Subarea,Generative modeling
+Modeling,GDS.Predictive.Modeling,Subarea,Predictive modeling
+Communication,GDS.Communication,Area,Data visualization and presentation
+Science,GDS.Science,Area,Science about data science

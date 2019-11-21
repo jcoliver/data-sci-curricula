@@ -1,19 +1,19 @@
-Institution,Program,Major
-Ohio State University - Main Campus,B.S. in Data Analytics,TRUE
-Pennsylvania State University - Main Campus,"B.S. in Data Sciences, Applied Data Science option",TRUE
-Pennsylvania State University - Main Campus,"B.S. in Data Sciences, Computational Science option",TRUE
-Stanford University,Data Science Minor,FALSE
-University of Arizona,Statistics and Data Science BA,TRUE
-University of Arizona,Statistics and Data Science BS,TRUE
-University of California - Berkeley,B.A. in Data Science,TRUE
-University of California - Davis,B.S. in Statistics: Statistical Data Science,TRUE
-University of Colorado - Boulder,B.A. in Statistics and Data Science,TRUE
-University of Illinois Urbana-Champaign,Certificate in Data Science ,FALSE
-University of Iowa,B.S. in Data Science,TRUE
-University of Maryland - College Park,B.S. in Computer Science with data science specialization,TRUE
-University of Washington - Seattle,"B.S. in Applied & Computational Mathematical Sciences, Data Sciences & Statistics Track",TRUE
-University of Washington - Seattle,"B.S. in Computer Science, Data Science Option",TRUE
-University of Washington - Seattle,B.S. in Human Centered Design & Engineering with Data Science option,TRUE
-University of Washington - Seattle,"B.S. in Informatics, Data Science Track",TRUE
-University of Washington - Seattle,B.S. in Statistics with Data Science option,TRUE
-Washington State University,"B.S. Computer Science, Data Science Track",TRUE
+Institution,Program,Major,Program.Abbr,Home.unit.name,Home.unit.category
+Ohio State University - Main Campus,B.S. in Data Analytics,TRUE,Data Analytics,Computer Science & Engineering; Statistics,cs; math_stats
+Pennsylvania State University - Main Campus,"B.S. in Data Sciences, Applied Data Science option",TRUE,Applied Data Science,Information,other
+Pennsylvania State University - Main Campus,"B.S. in Data Sciences, Computational Science option",TRUE,Computational Science,Computer Science & Engineering,cs
+Stanford University,Data Science Minor,FALSE,Data Sciences,Statistics,math_stats
+University of Arizona,Statistics and Data Science BA,TRUE,Statistics and DS BA,Mathematics,math_stats
+University of Arizona,Statistics and Data Science BS,TRUE,Statistics and DS BS,Mathematics,math_stats
+University of California - Berkeley,B.A. in Data Science,TRUE,Data Science,Data Science,other
+University of California - Davis,B.S. in Statistics: Statistical Data Science,TRUE,Statistical Data Science,Statistics,math_stats
+University of Colorado - Boulder,B.A. in Statistics and Data Science,TRUE,Statistics and DS,Mathematics,math_stats
+University of Illinois Urbana-Champaign,Certificate in Data Science ,FALSE,Data Science,Statistics,math_stats
+University of Iowa,B.S. in Data Science,TRUE,Data Science,Statistics & Actuarial Science,math_stats
+University of Maryland - College Park,B.S. in Computer Science with data science specialization,TRUE,Computer Science,Computer Science,cs
+University of Washington - Seattle,"B.S. in Applied & Computational Mathematical Sciences, Data Sciences & Statistics Track",TRUE,ACMS,Applied & Computational Mathematical Sciences,math_stats
+University of Washington - Seattle,"B.S. in Computer Science, Data Science Option",TRUE,Computer Science,Computer Science & Engineering,cs
+University of Washington - Seattle,B.S. in Human Centered Design & Engineering with Data Science option,TRUE,HCDE,Human Centered Design & Engineering,other
+University of Washington - Seattle,"B.S. in Informatics, Data Science Track",TRUE,Informatics,Information,other
+University of Washington - Seattle,B.S. in Statistics with Data Science option,TRUE,Statistics,Statistics,math_stats
+Washington State University,B.S. in Data Analytics,TRUE,Computer Science,Computer Science & Engineering; Mathematics & Statistics,cs; math_stats

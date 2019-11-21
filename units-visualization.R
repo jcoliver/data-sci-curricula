@@ -8,6 +8,9 @@ rm(list = ls())
 ################################################################################
 library(tidyverse)
 
+# TODO: Add shaded background rectangles corresponding to category of program 
+# home unit
+
 units.df <- read.csv(file = "data/units.csv")
 programs <- read.csv(file = "data/programs.csv")
 institutions <- read.csv(file = "data/institution-names.csv")
@@ -16,11 +19,13 @@ institutions <- read.csv(file = "data/institution-names.csv")
 units.df <- merge(x = units.df, y = institutions)
 rm(institutions)
 
+# Merge units.df with programs
+units.df <- merge(x = units.df, y = programs)
+rm(programs)
+
 # Limit units df to those programs that are majors (exclude minor & certificate
 # programs)
-majors <- programs[programs$Major, ]
-units.df <- units.df[units.df$Program %in% majors$Program, ]
-rm(programs, majors)
+units.df <- units.df[units.df$Major, ]
 
 # Drop any NA rows
 units.df <- na.omit(units.df)
@@ -39,8 +44,8 @@ units.df$Domain.prop <- units.df$Domain / units.df$Total
 
 # Transform to long format for plotting
 units.long <- units.df %>%
-  select(Institution, Program, Short.name, Stats.prop, CS.prop, Domain.prop) %>%
-  gather(key = "Area", value = "Proportion", -Institution, -Program, -Short.name)
+  select(Institution, Program, Short.name, Stats.prop, CS.prop, Domain.prop, Program.Abbr, Home.unit.category) %>%
+  gather(key = "Area", value = "Proportion", -Institution, -Program, -Short.name, -Program.Abbr, -Home.unit.category)
 
 # Make Area values a little more human readable
 units.long$Area <- gsub(pattern = ".prop", replacement = "", units.long$Area)
@@ -52,7 +57,12 @@ units.long$Area <- gsub(pattern = "CS",
                         units.long$Area)
 
 # Making additional field for plot labels
-units.long$Plot.label <- paste0(units.long$Short.name, "\n", units.long$Program)
+units.long$Plot.label <- paste0(units.long$Short.name, "\n", units.long$Program.Abbr)
+
+# Relevel Plot.label so they are ordered by the category of the home department
+units.long <- units.long[order(units.long$Home.unit.category, units.long$Institution), ]
+units.long$Plot.label <- factor(units.long$Plot.label,
+                                levels = unique(units.long$Plot.label))
 
 # Re-leveling to display in Stats, CS, Domain order
 units.long$Area <- factor(units.long$Area, levels = c("Domain", 
@@ -60,11 +70,27 @@ units.long$Area <- factor(units.long$Area, levels = c("Domain",
                                                       "Statistics/Mathematics"))
 
 # Plot as stacked bar plot
-units.plot <- ggplot(data = units.long, mapping = aes(x = Plot.label, 
+units.plot.bar <- ggplot(data = units.long, mapping = aes(x = Plot.label, 
                                                       y = Proportion,
                                                       fill = Area)) +
   geom_bar(stat = "identity") + 
   coord_flip() +
   scale_fill_manual(values = c("#222222", "#C2C2C2", "#818181")) +
   theme_bw()
-print(units.plot)
+print(units.plot.bar)
+
+# Plot as parallel coordinates plot
+units.plot.parallel <- ggplot(data = units.long, mapping = aes(x = Plot.label,
+                                                               y = Proportion,
+                                                               group = Area,
+                                                               fill = Area,
+                                                               color = Area)) +
+  scale_x_discrete() + # Necessary to get rectangle annotations to work
+  annotate(geom = "rect", xmin = 1, xmax = 3, ymin = 0, ymax = 1, 
+           fill = "#FF0000", alpha = 0.2, color = NA) + # test rectangle
+  geom_point() +
+  geom_line() +
+  scale_color_manual(values = c("#222222", "#C2C2C2", "#818181")) +
+  theme_bw() +
+  theme(axis.text.x = element_text(angle = 90))
+print(units.plot.parallel)

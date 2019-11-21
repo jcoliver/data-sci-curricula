@@ -5,6 +5,8 @@
 
 rm(list = ls())
 
+# TODO: Will need to come up with means of referencing Institution/Program 
+# combinations in plot that doesn't take up too much horizontal space
 ################################################################################
 library(tidyverse)
 
@@ -75,7 +77,8 @@ units.plot.bar <- ggplot(data = units.long, mapping = aes(x = Plot.label,
                                                       fill = Area)) +
   geom_bar(stat = "identity") + 
   coord_flip() +
-  scale_fill_manual(values = c("#222222", "#C2C2C2", "#818181")) +
+  labs(x = "Institution / Program", y = "Proportion of Major") +
+  scale_fill_manual(values = c("#D2D2D2", "#222222", "#8F8F8F")) +
   theme_bw()
 print(units.plot.bar)
 

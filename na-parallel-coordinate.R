@@ -8,31 +8,15 @@ rm(list = ls())
 ################################################################################
 library(tidyverse)
 library(RColorBrewer)
+source(file = "functions/area_scores.R")
 
 scores <- read.csv(file = "data/na-scores.csv", stringsAsFactors = FALSE)
 inst.names <- read.csv(file = "data/institution-names.csv", stringsAsFactors = FALSE)
-scores <- merge(x = scores, y = inst.names)
-
 areas <- read.csv(file = "data/na-areas-key.csv", stringsAsFactors = FALSE)
 
-# Need to calculate means for "Areas" from all contained "Subareas"
-for (area in unique(x = areas$Area)) {
-  # Look at one Area
-  area.key <- areas$Key[areas$Area == area & areas$Status == "Area"]
-  # Use Subarea to identify column names for calculating mean
-  subarea.keys <- areas$Key[areas$Area == area & areas$Status == "Subarea"]
-  # Catch situation when Area has only one Subarea (Domain)
-  if (length(subarea.keys) > 1) {
-    scores[, area.key] <- rowMeans(x = scores[, subarea.keys])
-  } else {
-    scores[, area.key] <- scores[, subarea.keys]
-  }
-}
-
-# Now extract only those columns that have means
-drop.cols <- areas$Key[areas$Status == "Subarea"]
-drop.cols <- c(drop.cols, "Row.Type")
-scores <- scores[, -which(colnames(scores) %in% drop.cols)]
+# Calculate mean of each Area, based on scores of Subareas
+scores <- area_scores(scores = scores, areas = areas)
+scores <- merge(x = scores, y = inst.names)
 
 # Remove NA rows (i.e. UA B.S.)
 scores <- na.omit(scores)

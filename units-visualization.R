@@ -5,13 +5,8 @@
 
 rm(list = ls())
 
-# TODO: Will need to come up with means of referencing Institution/Program 
-# combinations in plot that doesn't take up too much horizontal space
 ################################################################################
 library(tidyverse)
-
-# TODO: Add shaded background rectangles corresponding to category of program 
-# home unit
 
 units.df <- read.csv(file = "data/units.csv")
 programs <- read.csv(file = "data/programs.csv")
@@ -37,7 +32,8 @@ units.df <- na.omit(units.df)
 units.df$Stats <- (units.df$Stats.min + units.df$Stats.max) / 2
 units.df$CS <- (units.df$CS.min + units.df$CS.max) / 2
 units.df$Domain <- (units.df$Domain.min + units.df$Domain.max) / 2
-units.df$Total <- units.df$Stats + units.df$CS + units.df$Domain
+units.df$Total <- (units.df$Major.min + units.df$Major.max) / 2
+# units.df$Total <- units.df$Stats + units.df$CS + units.df$Domain
 
 # Calculate values as proportion of total units/hours for major
 units.df$Stats.prop <- units.df$Stats / units.df$Total
@@ -83,17 +79,55 @@ units.plot.bar <- ggplot(data = units.long, mapping = aes(x = Plot.label,
 print(units.plot.bar)
 
 # Plot as parallel coordinates plot
+
+# Figure out rectangles for indicating home department there will need to be 
+# three rectangles: cs, math/stats, other. The first two will have some overlap
+# as some programs are housed across both cs and math/stats units.
+# Rectangles will need to be defined on x-axis at fractional values (i.e. 2.4, 
+# 2.6) in order for them to show up correctly
+# home.categories <- units.long[, c("Institution", "Home.unit.category", "Plot.label")]
+home.categories <- units.long[!duplicated(units.long$Plot.label), "Home.unit.category"]
+home.categories <- as.character(home.categories)
+cs.indices <- which(home.categories %in% c("cs", "cs; math_stats"))
+math.indices <- which(home.categories %in% c("cs; math_stats", "math_stats"))
+other.indices <- which(home.categories %in% c("other"))
+
+homes <- data.frame(name = c("Computer\nScience", "Statistics/\nMathematics", "Other"),
+                    xmin = c(min(cs.indices), min(math.indices), min(other.indices)) - 0.4,
+                    xmax = c(max(cs.indices), max(math.indices), max(other.indices)) + 0.4,
+                    fill = c("#1b9e77", "#d95f02", "#7570b3"))
+homes$label.x <- (homes$xmin + homes$xmax) / 2
+
+# Re-leveling to display in CS, Stats, Domain order in legend
+units.long$Area <- factor(units.long$Area, levels = c("Computer Science",
+                                                      "Statistics/Mathematics",
+                                                      "Domain"))
+
+# Re-level programs by home unit, then how much CS, then Stats/math, then domain
+units.long <- units.long[order(units.long$Home.unit.category, units.long$Proportion, decreasing = c(FALSE, TRUE)), ]
+units.long$Plot.label <- factor(units.long$Plot.label,
+                                levels = unique(units.long$Plot.label))
+
+# ORIGINAL:
+# Relevel Plot.label so they are ordered by the category of the home department
+# units.long <- units.long[order(units.long$Home.unit.category, units.long$Institution), ]
+# units.long$Plot.label <- factor(units.long$Plot.label,
+#                                 levels = unique(units.long$Plot.label))
+
 units.plot.parallel <- ggplot(data = units.long, mapping = aes(x = Plot.label,
                                                                y = Proportion,
                                                                group = Area,
                                                                fill = Area,
                                                                color = Area)) +
   scale_x_discrete() + # Necessary to get rectangle annotations to work
-  annotate(geom = "rect", xmin = 1, xmax = 3, ymin = 0, ymax = 1, 
-           fill = "#FF0000", alpha = 0.2, color = NA) + # test rectangle
+  annotate(geom = "rect", xmin = homes$xmin, xmax = homes$xmax, ymin = 0, 
+           ymax = 1, fill = homes$fill, alpha = 0.2, color = NA) +
+  annotate(geom = "text", x = homes$label.x, y = 0.98, label = homes$name, 
+           vjust = 1.0, color = homes$fill) +
   geom_point() +
   geom_line() +
-  scale_color_manual(values = c("#222222", "#C2C2C2", "#818181")) +
+  scale_color_manual(values = c(as.character(homes$fill[1:2]), "#444444")) +
   theme_bw() +
-  theme(axis.text.x = element_text(angle = 90))
+  xlab(label = "Program") + 
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1.0))
 print(units.plot.parallel)

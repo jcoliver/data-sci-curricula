@@ -27,6 +27,9 @@ units.df <- units.df[units.df$Major, ]
 # Drop any NA rows
 units.df <- na.omit(units.df)
 
+# Re-number rows
+rownames(units.df) <- NULL
+
 # Calculate midpoint values between min/max to use for plot
 # Stats, CS, Domain
 units.df$Stats <- (units.df$Stats.min + units.df$Stats.max) / 2
@@ -122,12 +125,16 @@ units.plot.parallel <- ggplot(data = units.long, mapping = aes(x = Plot.label,
   scale_x_discrete() + # Necessary to get rectangle annotations to work
   annotate(geom = "rect", xmin = homes$xmin, xmax = homes$xmax, ymin = 0, 
            ymax = 1, fill = homes$fill, alpha = 0.2, color = NA) +
-  annotate(geom = "text", x = homes$label.x, y = 0.98, label = homes$name, 
+  annotate(geom = "text", x = homes$label.x, 
+           y = c(0.98, 0.56, 0.98), # dodging math line
+           label = homes$name, 
            vjust = 1.0, color = homes$fill) +
   geom_point() +
   geom_line() +
+  # Color of the line for Domain is different from the "Other" home category
   scale_color_manual(values = c(as.character(homes$fill[1:2]), "#444444")) +
   theme_bw() +
   xlab(label = "Program") + 
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1.0))
 print(units.plot.parallel)
+ggsave(filename = "output/program-units.pdf", plot = units.plot.parallel)

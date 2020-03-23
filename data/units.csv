@@ -1,19 +1,19 @@
 Institution,Program,Stats.min,Stats.max,CS.min,CS.max,Domain.min,Domain.max,Major.min,Major.max
-University of Arizona,Statistics and Data Science BA,31,36,4,7,0,0,38,40
-University of Arizona,Statistics and Data Science BS,31,36,4,7,0,0,38,40
-University of California - Davis,B.S. in Statistics: Statistical Data Science,59,63,16,20,0,0,79,79
-University of Iowa,B.S. in Data Science,33,46,14,23,0,3,59,63
-Ohio State University - Main Campus,B.S. in Data Analytics,37,37,27,27,0,27,74,101
-University of Illinois Urbana-Champaign,Certificate in Data Science ,6,14,0,3,0,4,12,15
-University of Maryland - College Park,B.S. in Computer Science with data science specialization,30,31,28,32,0,3,61,63
-Pennsylvania State University - Main Campus,"B.S. in Data Sciences, Computational Science option",30,42,18,30,0,0,86,86
-Pennsylvania State University - Main Campus,"B.S. in Data Sciences, Applied Data Science option",53,53,12,12,0,0,70,70
-Stanford University,Data Science Minor,18,19,4,7,0,0,22,26
-Washington State University,B.S. in Data Analytics,34,34,11,11,0,0,54,54
-University of California - Berkeley,B.A. in Data Science,22,52,7,27,0,14,44,62
-University of Colorado - Boulder,B.A. in Statistics and Data Science,44,44,8,8,0,0,52,52
-University of Washington - Seattle,"B.S. in Applied & Computational Mathematical Sciences, Data Sciences & Statistics Track",52,61,9,19,15,15,83,84
-University of Washington - Seattle,"B.S. in Computer Science, Data Science Option",3,34,20,64,0,10,48,64
-University of Washington - Seattle,"B.S. in Informatics, Data Science Track",45,45,14,14,0,0,66,66
-University of Washington - Seattle,B.S. in Statistics with Data Science option,69,78,8,9,0,3,79,87
-University of Washington - Seattle,B.S. in Human Centered Design & Engineering with Data Science option,21,42,5,13,28,58,96,99
+University of Arizona,Statistics and Data Science BA,31,36,4,7,0,18,38,40
+University of Arizona,Statistics and Data Science BS,31,42,4,13,7,18,45,54
+University of California - Davis,B.S. in Statistics: Statistical Data Science,67,71,8,12,0,0,79,79
+University of Iowa,B.S. in Data Science,33,43,17,23,0,0,59,63
+Ohio State University - Main Campus,B.S. in Data Analytics,37,51,27,37,0,27,78,98
+University of Illinois Urbana-Champaign,Certificate in Data Science ,6,14,0,3,NA,NA,12,15
+University of Maryland - College Park,B.S. in Computer Science with data science specialization,30,31,31,32,0,0,61,63
+Pennsylvania State University - Main Campus,"B.S. in Data Sciences, Computational Science option",45,57,18,30,0,0,87,87
+Pennsylvania State University - Main Campus,"B.S. in Data Sciences, Applied Data Science option",47,70,11,31,0,17,88,88
+Stanford University,Data Science Minor,18,19,3,6,NA,4,22,26
+Washington State University,B.S. in Data Analytics,36,66,7,37,0,46,89,104
+University of California - Berkeley,B.A. in Data Science,23,52,7,27,0,18,51,62
+University of Colorado - Boulder,B.A. in Statistics and Data Science,44,44,8,8,6,18,70,70
+University of Washington - Seattle,"B.S. in Applied & Computational Mathematical Sciences, Data Sciences & Statistics Track",51,72,9,29,15,15,90,97
+University of Washington - Seattle,"B.S. in Computer Science, Data Science Option",23,38,39,67,13,19,90,95
+University of Washington - Seattle,"B.S. in Informatics, Data Science Track",44,45,18,19,14,14,76,78
+University of Washington - Seattle,B.S. in Statistics with Data Science option,69,79,8,9,0,5,79,92
+University of Washington - Seattle,B.S. in Human Centered Design & Engineering with Data Science option,36,67,5,13,43,95,149,157

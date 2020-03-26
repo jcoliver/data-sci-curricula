@@ -111,12 +111,6 @@ units.long <- units.long[order(units.long$Home.unit.category, units.long$Proport
 units.long$Plot.label <- factor(units.long$Plot.label,
                                 levels = unique(units.long$Plot.label))
 
-# ORIGINAL:
-# Relevel Plot.label so they are ordered by the category of the home department
-# units.long <- units.long[order(units.long$Home.unit.category, units.long$Institution), ]
-# units.long$Plot.label <- factor(units.long$Plot.label,
-#                                 levels = unique(units.long$Plot.label))
-
 units.plot.parallel <- ggplot(data = units.long, mapping = aes(x = Plot.label,
                                                                y = Proportion,
                                                                group = Area,
@@ -135,6 +129,9 @@ units.plot.parallel <- ggplot(data = units.long, mapping = aes(x = Plot.label,
   scale_color_manual(values = c(as.character(homes$fill[1:2]), "#444444")) +
   theme_bw() +
   xlab(label = "Program") + 
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1.0))
+  theme(axis.text.x = element_text(angle = 90, 
+                                   vjust = 0.5, 
+                                   hjust = 1.0,
+                                   size = 6))
 print(units.plot.parallel)
 ggsave(filename = "output/program-units.pdf", plot = units.plot.parallel)

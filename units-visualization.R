@@ -134,4 +134,4 @@ units.plot.parallel <- ggplot(data = units.long, mapping = aes(x = Plot.label,
                                    hjust = 1.0,
                                    size = 6))
 print(units.plot.parallel)
-ggsave(filename = "output/program-units.pdf", plot = units.plot.parallel)
+ggsave(filename = "output/figure-program-units.pdf", plot = units.plot.parallel)

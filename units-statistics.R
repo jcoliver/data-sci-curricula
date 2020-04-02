@@ -6,7 +6,9 @@
 rm(list = ls())
 
 ################################################################################
-# Addresses two questions:
+# Summary statistics and statistical test comparing units among programs
+# Provides mean proportion of CS, math/stats, and domain units and addresses 
+# two questions:
 # 1. Do programs housed in Computer Science units have a higher proportion of 
 # computer science courses than programs housed in other units?
 # 2. Do programs housed in Statistics units have a higher proportion of 
@@ -55,6 +57,19 @@ units.df$CS.home[grep(x = units.df$Home.unit.category, pattern = "cs")] <- TRUE
 units.df$Stats.home <- FALSE
 units.df$Stats.home[grep(x = units.df$Home.unit.category, pattern = "math_stats")] <- TRUE
 
+# Summary statistics
+summary.stats <- data.frame(category = c("CS", "Stats", "Domain"),
+                            mean.prop = c(mean(units.df$CS.prop),
+                                          mean(units.df$Stats.prop),
+                                          mean(units.df$Domain.prop)),
+                            min.prop = c(min(units.df$CS.prop),
+                                         min(units.df$Stats.prop),
+                                         min(units.df$Domain.prop)),
+                            max.prop = c(max(units.df$CS.prop),
+                                         max(units.df$Stats.prop),
+                                         max(units.df$Domain.prop)))
+summary.stats[, c(2:4)] <- round(x = summary.stats[, c(2:4)], digits = 3)
+
 # t-test 1. More CS courses in CS-housed programs?
 cs.t <- t.test(x = units.df$CS.prop[units.df$CS.home],
                y = units.df$CS.prop[!units.df$CS.home],
@@ -64,7 +79,10 @@ stat.t <- t.test(x = units.df$Stats.prop[units.df$Stats.home],
                  y = units.df$Stats.prop[!units.df$Stats.home],
                  alternative = "greater")
 # Write outputs to file
-sink(file = "output/units-t-test.txt")
+sink(file = "output/units-statistics.txt")
+cat("Summary statistics", "\n")
+summary.stats
+cat("\n========================================", "\n")
 cat("Computer Science test", "\n")
 cs.t
 cat("========================================", "\n")

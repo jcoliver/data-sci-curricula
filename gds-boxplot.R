@@ -62,19 +62,22 @@ scores.long$area <- factor(x = scores.long$area, levels = rev(area.order))
 
 getPalette <- colorRampPalette(brewer.pal(9, "Set1"))
 
-ggplot(data = scores.long, mapping = aes(x = area, y = score)) +
+scores.boxplot <- ggplot(data = scores.long, mapping = aes(x = area, y = score)) +
   # geom_boxplot() +
   stat_summary(fun.data = boxplot_quantiles, geom = "boxplot") +
-  geom_point(mapping = aes(color = Short.name),
+  geom_point(mapping = aes(fill = Short.name),
              position = "jitter",
-             shape = 1) + 
-  scale_color_manual(values = getPalette(length(unique(scores.long$Short.name))),
+             shape = 21,
+             alpha = 0.6) + 
+  scale_fill_manual(values = getPalette(length(unique(scores.long$Short.name))),
                      name = "Institution") +
   labs(x = "Key Concept",
-       y = "Score",
-       title = "GDS framework",
-       subtitle = "Boxplots show 5, 25, 50, 75, and 95 quantiles;\npoints are individual programs") +
+       y = "Score") +
   theme_bw() +
   theme(legend.key.height = unit(x = 1, units = "picas")) +
   coord_flip()
-ggsave(filename = "output/figure-scores-boxplot-gds.pdf")
+ggsave(filename = "output/figure-scores-boxplot-gds.pdf",
+       plot = scores.boxplot,
+       width = 15,
+       height = 10, 
+       units = "cm")

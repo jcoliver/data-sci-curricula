@@ -67,18 +67,21 @@ scores.long$area <- gsub(pattern = "Domain",
                      replacement = "Domain-specific\neducation", 
                      x = scores.long$area)
 
-# Relevel areas by scores
+# Relevel areas by scores and save summary stats
 area.means <- scores.long %>%
   group_by(area) %>%
   summarize(mean = mean(score, na.rm = TRUE),
-            sterr = sd(score, na.rm = TRUE)/sqrt(n()))
+            sterr = sd(score, na.rm = TRUE)/sqrt(n()),
+            median = median(score, na.rm = TRUE))
+write.csv(x = area.means, 
+          file = "output/table-scores-na.csv",
+          row.names = FALSE)
 area.order <- area.means$area[order(area.means$mean, decreasing = TRUE)]
 scores.long$area <- factor(x = scores.long$area, levels = rev(area.order))
 
 getPalette <- colorRampPalette(brewer.pal(9, "Set1"))
 
 scores.boxplot <- ggplot(data = scores.long, mapping = aes(x = area, y = score)) +
-  # geom_boxplot() +
   stat_summary(fun.data = boxplot_quantiles, geom = "boxplot") +
   geom_point(mapping = aes(fill = Short.name),
              position = "jitter",

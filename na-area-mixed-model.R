@@ -40,6 +40,7 @@ anova(scores_lme) # shows an effect of Area
 scores_posthoc <- summary(multcomp::glht(scores_lme, 
                                          linfct = multcomp::mcp(Area = "Tukey")),
                           test = multcomp::adjusted("holm"))
+multcomp::cld(scores_posthoc)
 
 # Build a table from which we can extract coefficient estimates and p-values
 scores_posthoc_df <- data.frame(comparison = names(scores_posthoc$test$coefficients),

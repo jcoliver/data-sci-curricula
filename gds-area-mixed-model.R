@@ -1,7 +1,7 @@
-# Test for differences in area scores for National Academies framework
+# Test for differences in area scores for GDS framework
 # Jeffrey C. Oliver
 # jcoliver@email.arizona.edu
-# 2020-06-03
+# 2020-06-05
 
 rm(list = ls())
 
@@ -12,10 +12,10 @@ library(dplyr)
 library(lmerTest)
 library(emmeans)  # post-hoc test
 
-scores <- read.csv(file = "data/na-scores.csv", stringsAsFactors = FALSE)
-areas <- read.csv(file = "data/na-areas-key.csv", stringsAsFactors = FALSE)
-area_prefix <- "NA."
-output_file <- "output/na-lme.txt"
+scores <- read.csv(file = "data/gds-scores.csv", stringsAsFactors = FALSE)
+areas <- read.csv(file = "data/gds-areas-key.csv", stringsAsFactors = FALSE)
+area_prefix <- "GDS."
+output_file <- "output/gds-lme.txt"
 
 # Convert scores to long
 # Skip Row.Type, Institution, and Program

@@ -82,13 +82,15 @@ scores.long$area <- factor(x = scores.long$area, levels = rev(area.order))
 getPalette <- colorRampPalette(brewer.pal(9, "Set1"))
 
 scores.boxplot <- ggplot(data = scores.long, mapping = aes(x = area, y = score)) +
-  stat_summary(fun.data = boxplot_quantiles, geom = "boxplot") +
-  geom_point(mapping = aes(fill = Short.name),
-             position = "jitter",
+  stat_summary(fun.data = boxplot_quantiles, 
+               geom = "boxplot", 
+               width = 0.4) +
+  geom_point(position = "jitter",
+             # mapping = aes(fill = Short.name),
              shape = 21, 
              alpha = 0.6) + 
-  scale_fill_manual(values = getPalette(length(unique(scores.long$Short.name))),
-                    name = "Institution") +
+  # scale_fill_manual(values = getPalette(length(unique(scores.long$Short.name))),
+  #                   name = "Institution") +
   labs(x = "Key Concept",
        y = "Score") +
   theme_bw() +

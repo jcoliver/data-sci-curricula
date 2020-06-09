@@ -47,12 +47,15 @@ scores_long$inst.prog <- paste0(scores_long$Short.name,
 
 # For long-formatted data, want to re-level area, from highest mean score to 
 # lowest mean score
+
+# Start by calculating summary statistics
 area_stats <- scores_long %>%
   group_by(area) %>%
   summarize(mean_score = mean(score),
             sd_score = sd(score),
             median_score = median(score))
 
+# Re-level area based on mean values
 area_levels <- area_stats$area[order(area_stats$mean_score)]
 scores_long$area <- factor(x = scores_long$area,
                            levels = area_levels)
@@ -76,7 +79,12 @@ scores_violin <- ggplot(data = scores_long, mapping = aes(x = area, y = score)) 
   geom_violin(color = NA) +
   geom_violin(draw_quantiles = c(0.25, 0.75),
               fill = NA,
-              color = "red") +
+              color = "blue",
+              size = 0.5,
+              linetype = "11") +
+  # scale_x_discrete(name = "Area",
+  #                  limits = scores_long$area,
+  #                  labels = scores_long$Description) +
   geom_violin(draw_quantiles = c(0.5),
               fill = NA) +
   geom_point(data = program_means,
@@ -88,7 +96,6 @@ scores_violin <- ggplot(data = scores_long, mapping = aes(x = area, y = score)) 
        y = "Score") +
   theme_bw() +
   coord_flip()
-
 scores_violin
 
 ggsave(filename = paste0("output/figure-scores-violin-", framework, ".pdf"),

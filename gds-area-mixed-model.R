@@ -55,7 +55,13 @@ if (run_post_hoc) {
                                            linfct = multcomp::mcp(Area = "Tukey")),
                             test = multcomp::adjusted("holm"))
   cat("\nCompact letter display of post-hoc comparisons:\n")
-  print(multcomp::cld(scores_posthoc))
+  posthoc_letters <- multcomp::cld(scores_posthoc)
+  
+  # For saving & printing, need to remove newline characters from Area names
+  names(posthoc_letters) <- gsub(pattern = "\n", 
+                                 replacement = " ", 
+                                 x = names(posthoc_letters))
+  print(posthoc_letters)
   
   # Build a table from which we can extract coefficient estimates and p-values
   scores_posthoc_df <- data.frame(comparison = names(scores_posthoc$test$coefficients),

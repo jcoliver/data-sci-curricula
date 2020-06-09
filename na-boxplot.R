@@ -14,6 +14,7 @@ source(file = "functions/boxplot_quantiles.R")
 scores <- read.csv(file = "data/na-scores.csv", stringsAsFactors = FALSE)
 inst.names <- read.csv(file = "data/institution-names.csv", stringsAsFactors = FALSE)
 areas <- read.csv(file = "data/na-areas-key.csv", stringsAsFactors = FALSE)
+framework <- "na"
 
 # Calculate mean of each Area, based on scores of Subareas
 scores <- area_scores(scores = scores, areas = areas)
@@ -30,12 +31,14 @@ scores$inst.prog <- paste0(scores$Short.name,
 
 # Convert to long for ease of plotting
 scores.long <- scores %>%
-  gather(key = "area",
-         value = "score",
-         -Institution, -Program, -Short.name, -inst.prog)
+  pivot_longer(names_to = "area",
+               values_to = "score",
+               cols = -c(Institution, Program, Short.name, inst.prog))
 
-# Drop the prefix "NA." from area names
-scores.long$area <- gsub(pattern = "NA.", replacement = "", x = scores.long$area)
+# Drop the prefix "NA./GDS." from area names
+scores.long$area <- gsub(pattern = paste0(toupper(framework), "."), 
+                         replacement = "", 
+                         x = scores.long$area)
 
 # Change some names for easier plotting
 scores.long$area <- gsub(pattern = "\\.", replacement = " ", x = scores.long$area)
@@ -73,9 +76,18 @@ area.means <- scores.long %>%
   summarize(mean = mean(score, na.rm = TRUE),
             sterr = sd(score, na.rm = TRUE)/sqrt(n()),
             median = median(score, na.rm = TRUE))
-write.csv(x = area.means, 
-          file = "output/table-scores-na.csv",
+
+# For saving, replace newline characters with space
+area.means.print <- area.means
+area.means.print$area <- gsub(pattern = "\n",
+                              replacement = " ",
+                              x = area.means.print$area)
+
+write.csv(x = area.means.print, 
+          file = paste0("output/table-scores-", framework, ".csv"),
           row.names = FALSE)
+
+# Relevel, from highest mean score to lowest mean score
 area.order <- area.means$area[order(area.means$mean, decreasing = TRUE)]
 scores.long$area <- factor(x = scores.long$area, levels = rev(area.order))
 
@@ -85,7 +97,7 @@ scores.boxplot <- ggplot(data = scores.long, mapping = aes(x = area, y = score))
   stat_summary(fun.data = boxplot_quantiles, 
                geom = "boxplot", 
                width = 0.4) +
-  geom_point(position = "jitter",
+  geom_point(position = position_jitter(width = 0.2),
              # mapping = aes(fill = Short.name),
              shape = 21, 
              alpha = 0.6) + 
@@ -96,7 +108,7 @@ scores.boxplot <- ggplot(data = scores.long, mapping = aes(x = area, y = score))
   theme_bw() +
   theme(legend.key.height = unit(x = 1, units = "picas")) +
   coord_flip()
-ggsave(filename = "output/figure-scores-boxplot-na.pdf",
+ggsave(filename = paste0("output/figure-scores-boxplot-", framework, ".pdf"),
        plot = scores.boxplot,
        width = 15,
        height = 10, 

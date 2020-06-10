@@ -1,18 +1,18 @@
-# Violin plot of National Academies' framework scores
+# Violin plot of Greater Data Science framework scores
 # Jeff Oliver
 # jcoliver@email.arizona.edu
-# 2020-06-08
+# 2020-06-10
 
 rm(list = ls())
 
 ################################################################################
 library(tidyverse)
 
-scores <- read.csv(file = "data/na-scores.csv", stringsAsFactors = FALSE)
+scores <- read.csv(file = "data/gds-scores.csv", stringsAsFactors = FALSE)
 inst.names <- read.csv(file = "data/institution-names.csv", stringsAsFactors = FALSE)
-areas <- read.csv(file = "data/na-areas-key.csv", stringsAsFactors = FALSE)
-framework <- "na"
-plot_height_mod <- 1
+areas <- read.csv(file = "data/gds-areas-key.csv", stringsAsFactors = FALSE)
+framework <- "gds"
+plot_height_mod <- 3
 
 # Add also institutional data, which has value of Short.name
 scores <- merge(x = scores, y = inst.names)

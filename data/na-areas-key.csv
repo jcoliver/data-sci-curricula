@@ -1,57 +1,57 @@
-Area,Key,Status,Description
-Math,NA.Math.foundations,Area,Mathematical Foundations
-Math,NA.Math.01,Subarea,Set theory and basic logic
-Math,NA.Math.02,Subarea,Multivariate thinking via functions
-Math,NA.Math.03,Subarea,Basic probability theory
-Math,NA.Math.04,Subarea,Matrices and basic linear algebra
-Math,NA.Math.05,Subarea,Networks and graph theory
-Math,NA.Math.06,Subarea,Optimization
-Compute,NA.Compute.foundations,Area,Computational Foundations
-Compute,NA.Compute.01,Subarea,Basic abstractions
-Compute,NA.Compute.02,Subarea,Algorithmic thinking
-Compute,NA.Compute.03,Subarea,Programming concepts
-Compute,NA.Compute.04,Subarea,Data structures
-Compute,NA.Compute.05,Subarea,Simulations
-Statistics,NA.Statistics.foundations,Area,Statistical Foundations
-Statistics,NA.Statistics.01,Subarea,"Variability, uncertainty, sampling error, and inference"
-Statistics,NA.Statistics.02,Subarea,Multivariate thinking
-Statistics,NA.Statistics.03,Subarea,"Nonsampling error, design, experiments (e.g., A/B testing), biases, confounding, and causal inference"
-Statistics,NA.Statistics.04,Subarea,Exploratory data analysis
-Statistics,NA.Statistics.05,Subarea,Statistical modeling and model assessment
-Statistics,NA.Statistics.06,Subarea,Simulations and experiments
-Management,NA.Data.management.curation,Area,Data Management and Curation
-Management,NA.Data.management.01,Subarea,Data provenance
-Management,NA.Data.management.02,Subarea,"Data preparation, especially data cleansing and data transformation"
-Management,NA.Data.management.03,Subarea,Data management
-Management,NA.Data.management.04,Subarea,Record retention policies
-Management,NA.Data.management.05,Subarea,Data subject privacy
-Management,NA.Data.management.06,Subarea,Missing and conflicting data
-Management,NA.Data.management.07,Subarea,Modern databases
-Description,NA.Data.description.visualization,Area,Data description and visualization
-Description,NA.Data.description.visualization.01,Subarea,Data consistency checking
-Description,NA.Data.description.visualization.02,Subarea,Exploratory data analysis
-Description,NA.Data.description.visualization.03,Subarea,Grammar of graphics
-Modeling,NA.Data.modeling.assessment,Area,Data modeling and assessment
-Modeling,NA.Modeling.01,Subarea,Machine learning
-Modeling,NA.Modeling.02,Subarea,Multivariate modeling and supervised learning
-Modeling,NA.Modeling.03,Subarea,Dimension reduction techniques and unsupervised learning
-Modeling,NA.Modeling.04,Subarea,Deep learning
-Modeling,NA.Modeling.05,Subarea,Model assessment and sensitivity analysis
-Modeling,NA.Modeling.06,Subarea,Model interpretation (particularly for black box models)
-Reproducibility,NA.Workflow.reproducibility,Area,Workflow and reproducibility
-Reproducibility,NA.Reproducibility.01,Subarea,Workflows and workflow systems
-Reproducibility,NA.Reproducibility.02,Subarea,Reproducible analysis
-Communication,NA.Communication.teamwork,Area,Communication and teamwork
-Communication,NA.Communication.01,Subarea,Ability to understand client needs
-Communication,NA.Communication.02,Subarea,Clear and comprehensive reporting
-Communication,NA.Communication.03,Subarea,Conflict resolution skills
-Communication,NA.Communication.04,Subarea,Well-structured technical writing without jargon
-Communication,NA.Communication.05,Subarea,Effective presentation skills
-Domain,NA.Domain,Area,Domain-specific considerations
-Domain,NA.Domain.01,Subarea,Domain-specific considerations
-Ethics,NA.Ethics,Area,Ethical problem solving
-Ethics,NA.Ethics.01,Subarea,Ethical precepts for data science and codes of conduct
-Ethics,NA.Ethics.02,Subarea,Privacy and confidentiality
-Ethics,NA.Ethics.03,Subarea,Responsible conduct of research
-Ethics,NA.Ethics.04,Subarea,Ability to identify “junk” science
-Ethics,NA.Ethics.05,Subarea,Ability to detect algorithmic bias
+Area,Key,Status,Description,Label
+Math,NA.Math.foundations,Area,Mathematical foundations,Mathematical foundations
+Math,NA.Math.01,Subarea,Set theory and basic logic,
+Math,NA.Math.02,Subarea,Multivariate thinking via functions,
+Math,NA.Math.03,Subarea,Basic probability theory,
+Math,NA.Math.04,Subarea,Matrices and basic linear algebra,
+Math,NA.Math.05,Subarea,Networks and graph theory,
+Math,NA.Math.06,Subarea,Optimization,
+Compute,NA.Compute.foundations,Area,Computational foundations,Computational foundations
+Compute,NA.Compute.01,Subarea,Basic abstractions,
+Compute,NA.Compute.02,Subarea,Algorithmic thinking,
+Compute,NA.Compute.03,Subarea,Programming concepts,
+Compute,NA.Compute.04,Subarea,Data structures,
+Compute,NA.Compute.05,Subarea,Simulations,
+Statistics,NA.Statistics.foundations,Area,Statistical foundations,Statistical foundations
+Statistics,NA.Statistics.01,Subarea,"Variability, uncertainty, sampling error, and inference",
+Statistics,NA.Statistics.02,Subarea,Multivariate thinking,
+Statistics,NA.Statistics.03,Subarea,"Nonsampling error, design, experiments (e.g., A/B testing), biases, confounding, and causal inference",
+Statistics,NA.Statistics.04,Subarea,Exploratory data analysis,
+Statistics,NA.Statistics.05,Subarea,Statistical modeling and model assessment,
+Statistics,NA.Statistics.06,Subarea,Simulations and experiments,
+Management,NA.Data.management.curation,Area,Data management and curation,Data management & curation
+Management,NA.Data.management.01,Subarea,Data provenance,
+Management,NA.Data.management.02,Subarea,"Data preparation, especially data cleansing and data transformation",
+Management,NA.Data.management.03,Subarea,Data management,
+Management,NA.Data.management.04,Subarea,Record retention policies,
+Management,NA.Data.management.05,Subarea,Data subject privacy,
+Management,NA.Data.management.06,Subarea,Missing and conflicting data,
+Management,NA.Data.management.07,Subarea,Modern databases,
+Description,NA.Data.description.visualization,Area,Data description and visualization,Data description & visualization
+Description,NA.Data.description.visualization.01,Subarea,Data consistency checking,
+Description,NA.Data.description.visualization.02,Subarea,Exploratory data analysis,
+Description,NA.Data.description.visualization.03,Subarea,Grammar of graphics,
+Modeling,NA.Data.modeling.assessment,Area,Data modeling and assessment,Data modeling & assessment
+Modeling,NA.Modeling.01,Subarea,Machine learning,
+Modeling,NA.Modeling.02,Subarea,Multivariate modeling and supervised learning,
+Modeling,NA.Modeling.03,Subarea,Dimension reduction techniques and unsupervised learning,
+Modeling,NA.Modeling.04,Subarea,Deep learning,
+Modeling,NA.Modeling.05,Subarea,Model assessment and sensitivity analysis,
+Modeling,NA.Modeling.06,Subarea,Model interpretation (particularly for black box models),
+Reproducibility,NA.Workflow.reproducibility,Area,Workflow and reproducibility,Workflow & reproducibility
+Reproducibility,NA.Reproducibility.01,Subarea,Workflows and workflow systems,
+Reproducibility,NA.Reproducibility.02,Subarea,Reproducible analysis,
+Communication,NA.Communication.teamwork,Area,Communication and teamwork,Communication & teamwork
+Communication,NA.Communication.01,Subarea,Ability to understand client needs,
+Communication,NA.Communication.02,Subarea,Clear and comprehensive reporting,
+Communication,NA.Communication.03,Subarea,Conflict resolution skills,
+Communication,NA.Communication.04,Subarea,Well-structured technical writing without jargon,
+Communication,NA.Communication.05,Subarea,Effective presentation skills,
+Domain,NA.Domain,Area,Domain-specific considerations,Domain-specific considerations
+Domain,NA.Domain.01,Subarea,Domain-specific considerations,
+Ethics,NA.Ethics,Area,Ethical problem solving,Ethical problem solving
+Ethics,NA.Ethics.01,Subarea,Ethical precepts for data science and codes of conduct,
+Ethics,NA.Ethics.02,Subarea,Privacy and confidentiality,
+Ethics,NA.Ethics.03,Subarea,Responsible conduct of research,
+Ethics,NA.Ethics.04,Subarea,Ability to identify “junk” science,
+Ethics,NA.Ethics.05,Subarea,Ability to detect algorithmic bias,

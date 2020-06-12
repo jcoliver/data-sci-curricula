@@ -1,7 +1,7 @@
-# Violin plot of Greater Data Science framework scores
+# Caterpillar plot of Greater Data Science framework scores
 # Jeff Oliver
 # jcoliver@email.arizona.edu
-# 2020-06-10
+# 2020-06-12
 
 rm(list = ls())
 
@@ -43,12 +43,15 @@ area_stats <- scores_long %>%
   group_by(area) %>%
   summarize(mean_score = mean(score),
             sd_score = sd(score),
-            median_score = median(score))
+            se_score = sd(score)/sqrt(n()),
+            median_score = median(score),
+            first_quartile = quantile(x = score, probs = 0.25),
+            third_quartile = quantile(x = score, probs = 0.75))
 
 # Re-level area based on mean values
 area_levels <- area_stats$area[order(area_stats$mean_score)]
-scores_long$area <- factor(x = scores_long$area,
-                           levels = area_levels)
+area_stats$area <- factor(x = area_stats$area,
+                          levels = area_levels)
 
 # Write the summary stats to a file while we are here
 write.csv(x = area_stats, 
@@ -56,7 +59,7 @@ write.csv(x = area_stats,
           row.names = FALSE)
 
 # Create means for each program X institution combination so we can add points 
-# to boxplot
+# for each program to plot
 program_means <- scores_long %>%
   group_by(Short.name, Program, area) %>%
   summarize(score = mean(score))
@@ -69,7 +72,7 @@ plot_labels <- areas %>%
   rename(area = Area,
          label = Label)
 
-# Update labels with ampersands and linebreaks to conserve horizontal 
+# Update description with ampersands and linebreaks to conserve horizontal 
 # space in plot
 plot_labels$label <- stringr::str_wrap(string = plot_labels$label, 
                                        width = 20)
@@ -83,33 +86,30 @@ plot_labels <- plot_labels[order(plot_labels$area), ]
 plot_labels$label <- factor(x = plot_labels$label,
                             levels = plot_labels$label)
 
-# Plot the scores; geom_violin uses scores_long data, while geom_point uses 
-# program_means. Not convinced the coloring of quantiles will work in print, 
-# since outline is being drawn more than once.
-scores_violin <- ggplot(data = scores_long, mapping = aes(x = area, y = score)) +
-  geom_violin(color = NA) +
-  geom_violin(draw_quantiles = c(0.25, 0.75),
-              fill = NA,
-              color = "blue",
-              size = 0.5,
-              linetype = "11") +
+scores_catplot <- ggplot(data = area_stats, mapping = aes(x = area)) +
+  geom_errorbar(mapping = aes(ymin = mean_score - se_score,
+                              ymax = mean_score + se_score),
+                width = 0.0) +
+  geom_point(mapping = aes(y = mean_score), 
+             size = 2.5, 
+             shape = 21,
+             fill = "white") +
   scale_x_discrete(name = "Area",
                    limits = plot_labels$area,
                    labels = plot_labels$label) +
-  geom_violin(draw_quantiles = c(0.5),
-              fill = NA) +
   geom_point(data = program_means,
              mapping = aes(x = area, y = score),
-             position = position_jitter(width = 0.2),
-             shape = 21, 
-             alpha = 0.6) + 
+             shape = 21,
+             fill = "black",
+             alpha = 0.25,
+             size = 1) + 
   labs(x = "Area",
        y = "Score") +
   theme_bw() +
   coord_flip()
 
-ggsave(filename = paste0("output/figure-scores-violin-", framework, ".pdf"),
-       plot = scores_violin,
+ggsave(filename = paste0("output/figure-scores-catplot-", framework, ".pdf"),
+       plot = scores_catplot,
        width = 10,
        height = nrow(plot_labels) + plot_height_mod, 
        units = "cm")

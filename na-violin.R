@@ -69,7 +69,7 @@ plot_labels <- areas %>%
   rename(area = Area,
          label = Label)
 
-# Update description with ampersands and linebreaks to conserve horizontal 
+# Update labels with ampersands and linebreaks to conserve horizontal 
 # space in plot
 plot_labels$label <- stringr::str_wrap(string = plot_labels$label, 
                                        width = 20)
@@ -78,7 +78,7 @@ plot_labels$label <- stringr::str_wrap(string = plot_labels$label,
 plot_labels$area <- factor(x = plot_labels$area,
                            levels = area_levels)
 plot_labels <- plot_labels[order(plot_labels$area), ]
-# And finally re-level description, which will dictate the order in which 
+# And finally re-level label, which will dictate the order in which 
 # things appear on the axis
 plot_labels$label <- factor(x = plot_labels$label,
                             levels = plot_labels$label)
@@ -87,7 +87,6 @@ plot_labels$label <- factor(x = plot_labels$label,
 # program_means. Not convinced the coloring of quantiles will work in print, 
 # since outline is being drawn more than once.
 scores_violin <- ggplot(data = scores_long, mapping = aes(x = area, y = score)) +
-  # geom_violin(draw_quantiles = c(0.25, 0.5, 0.75)) +
   geom_violin(color = NA) +
   geom_violin(draw_quantiles = c(0.25, 0.75),
               fill = NA,

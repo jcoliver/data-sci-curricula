@@ -63,6 +63,13 @@ if (run_post_hoc) {
                                  x = names(posthoc_letters))
   print(posthoc_letters)
   
+  # If letters are going to be used for plotting, they should probably be 
+  # separated by commas. A base R way of doing this would be 
+  # unlist(lapply(X = strsplit(x = posthoc_letters, split = ""), 
+  #               FUN = function(x) {
+  #                 paste(x, collapse = ",")
+  #                 }))
+  
   # Build a table from which we can extract coefficient estimates and p-values
   scores_posthoc_df <- data.frame(comparison = names(scores_posthoc$test$coefficients),
                                   coefficients = scores_posthoc$test$coefficients,

@@ -14,13 +14,13 @@ library(emmeans)  # post-hoc test
 
 scores <- read.csv(file = "data/na-scores.csv", stringsAsFactors = FALSE)
 areas <- read.csv(file = "data/na-areas-key.csv", stringsAsFactors = FALSE)
-area_prefix <- "NA."
-output_file <- "output/na-lme.txt"
+framework <- "na"
 
 # Convert scores to long
 # Skip Row.Type, Institution, and Program
 # During pivot, drop data from columns with higher area name, as they have no 
 # data
+area_prefix <- paste0(toupper(x = framework), ".")
 scores_long <- scores %>%
   pivot_longer(cols = starts_with(match = area_prefix),
                names_to = "Subarea", 
@@ -38,6 +38,7 @@ scores_lme <- lmerTest::lmer(Score ~ Area + (1|Program),
                          data = scores_long)
 lme_model <- anova(scores_lme) # shows an effect of Area
 
+output_file <- paste0("output/", framework, "-lme.txt")
 sink(file = output_file)
 cat("Linear mixed effects model results\n\n")
 print(lme_model)
@@ -58,17 +59,15 @@ if (run_post_hoc) {
   posthoc_letters <- multcomp::cld(scores_posthoc)
 
   # For saving & printing, need to remove newline characters from Area names
-  names(posthoc_letters) <- gsub(pattern = "\n", 
-                                 replacement = " ", 
-                                 x = names(posthoc_letters))
   print(posthoc_letters)
+
+  # Write the letters to a file for use in plotting, but first make it a data
+  # frame
+  posthoc_df <- data.frame(Area = names(posthoc_letters$mcletters$Letters),
+                           Letters = posthoc_letters$mcletters$Letters)
   
-  # If letters are going to be used for plotting, they should probably be 
-  # separated by commas. A base R way of doing this would be 
-  # unlist(lapply(X = strsplit(x = posthoc_letters, split = ""), 
-  #               FUN = function(x) {
-  #                 paste(x, collapse = ",")
-  #                 }))
+  letters_file <- paste0("output/", framework, "-lme-letters.csv")
+  write.csv(x = posthoc_df, file = letters_file, row.names = FALSE)
   
   # Build a table from which we can extract coefficient estimates and p-values
   scores_posthoc_df <- data.frame(comparison = names(scores_posthoc$test$coefficients),
@@ -77,7 +76,5 @@ if (run_post_hoc) {
                                   t_value = scores_posthoc$test$tstat,
                                   p_value = scores_posthoc$test$pvalues)
   rownames(scores_posthoc_df) <- NULL
-  
-  
 }
 sink()

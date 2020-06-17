@@ -5,6 +5,8 @@
 
 rm(list = ls())
 
+# TODO: Make error bars *2* SE?
+
 ################################################################################
 library(tidyverse)
 
@@ -102,11 +104,41 @@ scores_catplot <- ggplot(data = area_stats, mapping = aes(x = area)) +
              shape = 21,
              fill = "black",
              alpha = 0.25,
-             size = 1) + 
+             size = 1)
+
+# If they are available, get the letters from post-hoc tests to add to plot
+letters_file <- paste0("output/", framework, "-lme-letters.csv")
+
+if (file.exists(letters_file)) {
+  posthoc_letters <- read.csv(file = letters_file, stringsAsFactors = FALSE)
+  
+  # If letters are going to be used for plotting, they should probably be 
+  # separated by commas. A base R way of doing this would be 
+  plot_letters <- unlist(lapply(X = strsplit(x = posthoc_letters$Letters, split = ""),
+                                FUN = function(x) {
+                                  paste(x, collapse = ", ")
+                                }))
+  posthoc_letters$Plot_letters <- plot_letters
+  scores_catplot <- scores_catplot +
+    annotate("text", 
+             x = posthoc_letters$Area, 
+             y = 0.5, 
+             label = posthoc_letters$Plot_letters,
+             adj = 0,
+             size = 3.5) +
+    ylim(c(0.5, 4)) # Need to add space if we add letters
+  
+} else {
+  message("Could not find file for adding post-hoc letters to plot")
+}
+
+# Some final theming for the figure
+scores_catplot <- scores_catplot + 
   labs(x = "Area",
        y = "Score") +
   theme_bw() +
   coord_flip()
+scores_catplot
 
 ggsave(filename = paste0("output/figure-scores-catplot-", framework, ".pdf"),
        plot = scores_catplot,

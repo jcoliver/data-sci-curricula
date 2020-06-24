@@ -1,3 +1,0 @@
-# Figure units-visualization
-
-Proportion of units in three categories (computer science, mathematics and statistics, and domain) for data science majors. Shaded rectangles indicate discipline of home unit of major; e.g. the Computational Data Science degree at Pennsylvania State University is housed in the School of Electrical Engineering and Computer Science and the degree at Ohio State University is jointly housed by in the Department of Computer Science and Engineering and the Department of Statistics.

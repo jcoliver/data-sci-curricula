@@ -5,7 +5,7 @@ run_clmm <- function(framework = c("na", "gds")) {
   if(!require(tidyr)) { # Data wrangling, especially pivot_longer
     stop("run_clmm requires tidyr package, which could not be loaded.")
   }
-  if(!require(dplyr)) {
+  if(!require(magrittr)) { # The pipe %>% operator
     stop("run_clmm requires dplyr package, which could not be loaded.")
   }
   if(!require(ordinal)){ # Ordinal mixed effects regression

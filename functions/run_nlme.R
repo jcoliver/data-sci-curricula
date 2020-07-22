@@ -2,6 +2,9 @@
 #' 
 #' @param framework  character vector indicating which framework to analyze
 run_nlme <- function(framework = c("na", "gds")) {
+  message("run_nlme is deprecated; use run_clmm instead.")
+  stop()
+  
   if(!require(car)) {
     stop("run_nlme requires car package, which could not be loaded.")
   }

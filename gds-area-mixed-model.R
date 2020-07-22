@@ -6,9 +6,10 @@
 rm(list = ls())
 
 ################################################################################
-# Using a mixed model, where Area is fixed effect and program is random effect
-source(file = "functions/run_nlme.R")
+# Using a ordinal regression mixed model, where Area is fixed effect and 
+# program is random effect
+source(file = "functions/run_clmm.R")
 
 framework <- "gds"
 
-run_nlme(framework = framework)
+run_clmm(framework = framework)

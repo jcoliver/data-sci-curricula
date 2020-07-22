@@ -2,6 +2,9 @@
 #' 
 #' @param framework  character vector indicating which framework to analyze
 run_nlme <- function(framework = c("na", "gds")) {
+  if(!require(car)) {
+    stop("run_nlme requires car package, which could not be loaded.")
+  }
   if(!require(tidyr)) {
     stop("run_nlme requires tidyr package, which could not be loaded.")
   }
@@ -14,7 +17,7 @@ run_nlme <- function(framework = c("na", "gds")) {
   if(!require(emmeans)) {
     stop("run_nlme requires emmeans package, which could not be loaded.")
   }
-
+  
   score_file <- paste0("data/", framework, "-scores.csv")
   scores <- read.csv(file = score_file, stringsAsFactors = FALSE)
   areas_file <- paste0("data/", framework, "-areas-key.csv")
@@ -37,11 +40,44 @@ run_nlme <- function(framework = c("na", "gds")) {
                        by.x = "Subarea",
                        by.y = "Key")
   
+  # Explicitly cast Area as a factor for subsequent assumption tests
+  scores_long$Area <- factor(x = scores_long$Area)
+  
   # Run mixed model: Area as fixed, program as random 
+  
   scores_lme <- lmerTest::lmer(Score ~ Area + (1|Program), 
                                data = scores_long)
   lme_model <- anova(scores_lme) # shows an effect of Area
   
+  # Test assumptions of model:
+  # 1. Linearity: Plot response (y) vs. residuals (x)
+  # 2a. Homoscedasticity: Plot standardized residuals (y) vs predicted values (x)
+  # 2b. Homoscedasticity: Run Levene's test
+  # 3. Normality: Q-Q plot
+  
+  assumptions_file <- paste0("output/", framework, "-assumptions.pdf")
+  pdf(file = assumptions_file, useDingbats = FALSE)
+  # 1. Linearity: Plot response (y) vs. residuals (x)
+  plot(x = resid(scores_lme),
+       y = scores_long$Score,
+       xlab = "Residuals from LME model",
+       ylab = paste0("Scores, ", framework, " framework"))
+
+  # 2a. Homoscedasticity: Plot standardized residuals (y) vs predicted values (x)
+    plot(scores_lme,
+       xlab = "Fitted scores",
+       ylab = "Standardized residuals")
+    
+  # 2b. Homoscedasticity: Run Levene's test
+  # leveneTest(residuals(scores_lme) ~ scores_long$Area)
+  
+  # 3. Normality: Q-Q plot
+  lattice::qqmath(scores_lme)
+  
+  dev.off()
+
+  # Write model results to file, and if appropriate, run post-hoc pairwise 
+  # comparisons
   output_file <- paste0("output/", framework, "-lme.txt")
   sink(file = output_file)
   cat("Linear mixed effects model results\n\n")

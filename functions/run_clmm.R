@@ -2,10 +2,10 @@
 #' 
 #' @param framework  character vector indicating which framework to analyze
 run_clmm <- function(framework = c("na", "gds")) {
-  if(!require(tidyr)) { # Data wrangling, especially pivot_longer
+  if(!require(tidyr)) { # Data wrangling, pivot_longer
     stop("run_clmm requires tidyr package, which could not be loaded.")
   }
-  if(!require(magrittr)) { # The pipe %>% operator
+  if(!require(dplyr)) { # Data wrangling, select and the pipe %>% operator
     stop("run_clmm requires dplyr package, which could not be loaded.")
   }
   if(!require(ordinal)){ # Ordinal mixed effects regression
@@ -21,7 +21,7 @@ run_clmm <- function(framework = c("na", "gds")) {
   areas <- read.csv(file = areas_file, stringsAsFactors = FALSE)
   
   # Convert scores to long
-  # Skip Row.Type, Institution, and Program
+  # Skip Row.Type & Institution
   # During pivot, drop data from columns with higher area name, as they have no 
   # data
   area_prefix <- paste0(toupper(x = framework), ".")
@@ -29,7 +29,8 @@ run_clmm <- function(framework = c("na", "gds")) {
     pivot_longer(cols = starts_with(match = area_prefix),
                  names_to = "Subarea", 
                  values_to = "Score",
-                 values_drop_na = TRUE)
+                 values_drop_na = TRUE) %>%
+    select(-Row.Type, -Institution)
   
   # Need to assign Area for each subarea.
   scores_long <- merge(x = scores_long, 
@@ -67,7 +68,19 @@ run_clmm <- function(framework = c("na", "gds")) {
   
   # Create Area x Area matrix to place p-values in lower diagonal, z-scores in 
   # upper diagonal
-  area_names <- levels(scores_long$Area)
+  # area_names <- levels(scores_long$Area)
+
+  # We'll want to order these by highest scoring areas first, lowest scoring 
+  # areas last, so calculate means and use that to extract order for matrix
+  options(dplyr.summarise.inform = FALSE)  # Turn off ungrouping message
+  area_means <- scores_long %>%
+    group_by(Area) %>%
+    summarize(area_mean = mean(Score)) %>%
+    arrange(desc(area_mean))
+  options(dplyr.summarise.inform = TRUE) # Revert to default messaging behavior
+  
+  area_names <- area_means$Area
+  
   scores_posthoc_mat <- matrix(data = NA, 
                                nrow = length(area_names), 
                                ncol = length(area_names))
@@ -78,10 +91,28 @@ run_clmm <- function(framework = c("na", "gds")) {
   for (a_r in 1:length(area_names)) {
     for (a_c in 1:length(area_names)) {
       if (a_r < a_c) {
+        # In the post-hoc output of emmeans, the contrast is labeled as 
+        # "Group i - Group j", where i is always a lower level than j. 
+        # Generally, this means that contrasts are presented in alphabetical 
+        # order. i.e. the contrast between Communication and Computing should 
+        # be presented as "Communication - Computing", _not_ as 
+        # "Computing - Communication". Because we are ordering the matrix rows/
+        # columns by the mean score of the area and not by alphabetical order, 
+        # will need to be creative and check for a non existent comparison as 
+        # we cycle over the contrasts
+
         # Which two areas are being compared?
         contrast_i <- paste0(area_names[a_r], " - ", area_names[a_c])
         # Which row of the contrast data frame is this comparison in?
         df_row <- which(scores_posthoc_df$contrast == contrast_i)
+
+        # Here we check to make sure we were able to pull out the value of the 
+        # contrast; if not, reverse the order of area names to line up with 
+        # the output from emmeans
+        if (length(df_row) < 1) { # Need to swap order of area_names to get row
+          contrast_i <- paste0(area_names[a_c], " - ", area_names[a_r])
+          df_row <- which(scores_posthoc_df$contrast == contrast_i)
+        }
         # Assign p-value to appropriate matrix cell (above diagonal)
         p_value <- round(scores_posthoc_df$p.value[df_row], digits = 4)
         scores_posthoc_mat[a_r, a_c] <- p_value
@@ -97,8 +128,19 @@ run_clmm <- function(framework = c("na", "gds")) {
                                 nrow = nrow(scores_posthoc_mat),
                                 ncol = ncol(scores_posthoc_mat))
   scores_posthoc_char[scores_posthoc_mat == 0] <- "< 0.0001"
-  rownames(scores_posthoc_char) <- rownames(scores_posthoc_mat)
-  colnames(scores_posthoc_char) <- colnames(scores_posthoc_mat)
+
+  # Finally, for purposes of reporting, we want the more informative "Label" for
+  # the Area, not the shorthand, to show up in the final output.
+  area_labels <- areas$Label[areas$Status == "Area"]
+  names(area_labels) <- as.character(areas$Area[areas$Status == "Area"])
+  
+  # Re-order the area_labels vector so it appears in same order as row/columns
+  # of post-hoc matrix
+  area_labels <- area_labels[rownames(scores_posthoc_mat)]
+
+  # Update row/column names in character matrix being written to file
+  rownames(scores_posthoc_char) <- area_labels
+  colnames(scores_posthoc_char) <- area_labels
   
   write.csv(x = scores_posthoc_char, 
             file = paste0("output/", framework, "-clmm-posthoc.csv"),

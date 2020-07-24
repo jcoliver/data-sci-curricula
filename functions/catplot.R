@@ -141,7 +141,7 @@ catplot <- function(framework = c("na", "gds"), plot_height_mod = 1) {
     coord_flip()
   scores_catplot
   
-  ggsave(filename = paste0("output/figure-scores-catplot-", framework, ".pdf"),
+  ggsave(filename = paste0("output/scores-", framework, ".pdf"),
          plot = scores_catplot,
          width = 10,
          height = nrow(plot_labels) + plot_height_mod, 

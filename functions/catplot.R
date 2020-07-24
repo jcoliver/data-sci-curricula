@@ -56,7 +56,7 @@ catplot <- function(framework = c("na", "gds"), plot_height_mod = 1) {
   
   # Write the summary stats to a file while we are here
   write.csv(x = area_stats, 
-            file = paste0("output/table-scores-", framework, ".csv"),
+            file = paste0("output/summary-stats-", framework, ".csv"),
             row.names = FALSE)
   
   # Create means for each program X institution combination so we can add points 

@@ -27,7 +27,7 @@ run_nlme <- function(framework = c("na", "gds")) {
   areas <- read.csv(file = areas_file, stringsAsFactors = FALSE)
   
   # Convert scores to long
-  # Skip Row.Type, Institution, and Program
+  # Skip Institution and Program
   # During pivot, drop data from columns with higher area name, as they have no 
   # data
   area_prefix <- paste0(toupper(x = framework), ".")

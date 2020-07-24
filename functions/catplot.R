@@ -20,7 +20,7 @@ catplot <- function(framework = c("na", "gds"), plot_height_mod = 1) {
   scores_long <- scores %>%
     pivot_longer(names_to = "subarea",
                  values_to = "score",
-                 cols = -c(Row.Type, Institution, Program, Short.name),
+                 cols = -c(Institution, Program, Short.name),
                  values_drop_na = TRUE)
   
   # Merge with the area data frame so we can line up subareas with appropriate 
@@ -38,6 +38,7 @@ catplot <- function(framework = c("na", "gds"), plot_height_mod = 1) {
   # lowest mean score
   
   # Start by calculating summary statistics
+  options(dplyr.summarise.inform = FALSE)
   area_stats <- scores_long %>%
     group_by(area) %>%
     summarize(mean_score = mean(score),
@@ -46,7 +47,8 @@ catplot <- function(framework = c("na", "gds"), plot_height_mod = 1) {
               median_score = median(score),
               first_quartile = quantile(x = score, probs = 0.25),
               third_quartile = quantile(x = score, probs = 0.75))
-  
+  options(dplyr.summarise.inform = TRUE)
+
   # Re-level area based on mean values
   area_levels <- area_stats$area[order(area_stats$mean_score)]
   area_stats$area <- factor(x = area_stats$area,
@@ -59,9 +61,11 @@ catplot <- function(framework = c("na", "gds"), plot_height_mod = 1) {
   
   # Create means for each program X institution combination so we can add points 
   # for each program to plot
+  options(dplyr.summarise.inform = FALSE)
   program_means <- scores_long %>%
     group_by(Short.name, Program, area) %>%
     summarize(score = mean(score))
+  options(dplyr.summarise.inform = TRUE)
   
   # Will want to get labels for the graph, but only need it for Areas (not sub-
   # areas)

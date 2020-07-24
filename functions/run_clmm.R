@@ -21,7 +21,7 @@ run_clmm <- function(framework = c("na", "gds")) {
   areas <- read.csv(file = areas_file, stringsAsFactors = FALSE)
   
   # Convert scores to long
-  # Skip Row.Type & Institution
+  # Skip Institution
   # During pivot, drop data from columns with higher area name, as they have no 
   # data
   area_prefix <- paste0(toupper(x = framework), ".")
@@ -30,7 +30,7 @@ run_clmm <- function(framework = c("na", "gds")) {
                  names_to = "Subarea", 
                  values_to = "Score",
                  values_drop_na = TRUE) %>%
-    select(-Row.Type, -Institution)
+    select(-Institution)
   
   # Need to assign Area for each subarea.
   scores_long <- merge(x = scores_long, 

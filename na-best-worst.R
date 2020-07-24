@@ -13,12 +13,7 @@ scores <- merge(x = scores, y = inst.names)
 
 areas <- read.csv(file = "data/na-areas-key.csv", stringsAsFactors = FALSE)
 
-# Drop any column that isn't a subarea (keeping institution and program info)
-drop.cols <- areas$Key[areas$Status == "Area"]
-drop.cols <- c(drop.cols, "Row.Type")
-scores <- scores[, -which(colnames(scores) %in% drop.cols)]
-
-# Remove NA rows (i.e. UA B.S.)
+# Remove NA rows
 scores <- na.omit(scores)
 rownames(scores) <- NULL
 

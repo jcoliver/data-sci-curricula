@@ -11,8 +11,8 @@ rm(list = ls())
 # in the data directory:
 # head -n1 na-01-tm-raw.csv > na-01-tm.csv
 # grep -e "4-point scale code" na-01-tm-raw.csv >> na-01-tm.csv
-tm.scores <- read.csv(file = "data/na-01-tm.csv")
-jo.scores <- read.csv(file = "data/na-01-jo.csv")
+tm.scores <- read.csv(file = "data/preliminary-scores/na-01-tm.csv")
+jo.scores <- read.csv(file = "data/preliminary-scores/na-01-jo.csv")
 
 # Sort the data.frames to ensure same order
 tm.scores <- tm.scores[order(tm.scores$Institution, tm.scores$Program), ]

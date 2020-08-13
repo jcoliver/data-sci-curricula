@@ -6,6 +6,8 @@
 rm(list = ls())
 
 ################################################################################
+stop("Script has already been run. Data files already cleaned up.")
+
 # The files with scores include columns that lack any data and a column called 
 # Row.Type, which is not useful for any analyses. Need to drop the NA columns
 # and the Row.Type column, then update any files referring to those columns
@@ -14,10 +16,10 @@ library(tidyverse)
 frameworks <- c("na", "gds")
 
 for (framework in frameworks) {
-  score_file <- paste0("data/", framework, "-scores.csv")
+  score_file <- paste0("data/scores-", framework, ".csv")
   scores <- read.csv(file = score_file, stringsAsFactors = FALSE)
 
-  areas_file <- paste0("data/", framework, "-areas-key.csv")
+  areas_file <- paste0("data/areas-key-", framework, ".csv")
   areas <- read.csv(file = areas_file, stringsAsFactors = FALSE)
   
   # Remove Row.Type 

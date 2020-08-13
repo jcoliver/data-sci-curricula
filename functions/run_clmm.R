@@ -15,9 +15,11 @@ run_clmm <- function(framework = c("na", "gds")) {
     stop("run_clmm requires emmeans package, which could not be loaded.")
   }
   
-  score_file <- paste0("data/", framework, "-scores.csv")
+  score_file <- paste0("data/scores-", framework, ".csv")
+  # score_file <- paste0("data/", framework, "-scores.csv")
   scores <- read.csv(file = score_file, stringsAsFactors = FALSE)
-  areas_file <- paste0("data/", framework, "-areas-key.csv")
+  areas_file <- paste0("data/areas-key-", framework, ".csv")
+  # areas_file <- paste0("data/", framework, "-areas-key.csv")
   areas <- read.csv(file = areas_file, stringsAsFactors = FALSE)
   
   # Convert scores to long

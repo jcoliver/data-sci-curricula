@@ -8,78 +8,78 @@ rm(list = ls())
 ################################################################################
 library(tidyverse)
 
-units.df <- read.csv(file = "data/units.csv")
+units_df <- read.csv(file = "data/units.csv")
 programs <- read.csv(file = "data/programs.csv")
 institutions <- read.csv(file = "data/institution-names.csv")
 
-# Merge the institutions with units to get short names in units.df
-units.df <- merge(x = units.df, y = institutions)
+# Merge the institutions with units to get short names in units_df
+units_df <- merge(x = units_df, y = institutions)
 rm(institutions)
 
-# Merge units.df with programs
-units.df <- merge(x = units.df, y = programs)
+# Merge units_df with programs
+units_df <- merge(x = units_df, y = programs)
 rm(programs)
 
 # Limit units df to those programs that are majors (exclude minor & certificate
 # programs)
-units.df <- units.df[units.df$Major, ]
+units_df <- units_df[units_df$Major, ]
 
 # Drop any NA rows
-units.df <- na.omit(units.df)
+units_df <- na.omit(units_df)
 
 # Re-number rows
-rownames(units.df) <- NULL
+rownames(units_df) <- NULL
 
 # Calculate midpoint values between min/max to use for plot
 # Stats, CS, Domain
-units.df$Stats <- (units.df$Stats.min + units.df$Stats.max) / 2
-units.df$CS <- (units.df$CS.min + units.df$CS.max) / 2
-units.df$Domain <- (units.df$Domain.min + units.df$Domain.max) / 2
-units.df$Total <- (units.df$Major.min + units.df$Major.max) / 2
-# units.df$Total <- units.df$Stats + units.df$CS + units.df$Domain
+units_df$Stats <- (units_df$Stats.min + units_df$Stats.max) / 2
+units_df$CS <- (units_df$CS.min + units_df$CS.max) / 2
+units_df$Domain <- (units_df$Domain.min + units_df$Domain.max) / 2
+units_df$Total <- (units_df$Major.min + units_df$Major.max) / 2
+# units_df$Total <- units_df$Stats + units_df$CS + units_df$Domain
 
 # Calculate values as proportion of total units/hours for major
-units.df$Stats.prop <- units.df$Stats / units.df$Total
-units.df$CS.prop <- units.df$CS / units.df$Total
-units.df$Domain.prop <- units.df$Domain / units.df$Total
+units_df$Stats.prop <- units_df$Stats / units_df$Total
+units_df$CS.prop <- units_df$CS / units_df$Total
+units_df$Domain.prop <- units_df$Domain / units_df$Total
 
 # Transform to long format for plotting
-units.long <- units.df %>%
+units_long <- units_df %>%
   select(Institution, Program, Short.name, Stats.prop, CS.prop, Domain.prop, Program.Abbr, Home.unit.category) %>%
   gather(key = "Area", value = "Proportion", -Institution, -Program, -Short.name, -Program.Abbr, -Home.unit.category)
 
 # Make Area values a little more human readable
-units.long$Area <- gsub(pattern = ".prop", replacement = "", units.long$Area)
-units.long$Area <- gsub(pattern = "Stats",
+units_long$Area <- gsub(pattern = ".prop", replacement = "", units_long$Area)
+units_long$Area <- gsub(pattern = "Stats",
                         replacement = "Statistics/Mathematics",
-                        units.long$Area)
-units.long$Area <- gsub(pattern = "CS",
+                        units_long$Area)
+units_long$Area <- gsub(pattern = "CS",
                         replacement = "Computer Science",
-                        units.long$Area)
+                        units_long$Area)
 
 # Making additional field for plot labels
-units.long$Plot.label <- paste0(units.long$Short.name, "\n", units.long$Program.Abbr)
+units_long$Plot.label <- paste0(units_long$Short.name, "\n", units_long$Program.Abbr)
 
 # Relevel Plot.label so they are ordered by the category of the home department
-units.long <- units.long[order(units.long$Home.unit.category, units.long$Institution), ]
-units.long$Plot.label <- factor(units.long$Plot.label,
-                                levels = unique(units.long$Plot.label))
+units_long <- units_long[order(units_long$Home.unit.category, units_long$Institution), ]
+units_long$Plot.label <- factor(units_long$Plot.label,
+                                levels = unique(units_long$Plot.label))
 
 # Re-leveling to display in Stats, CS, Domain order
-units.long$Area <- factor(units.long$Area, levels = c("Domain", 
+units_long$Area <- factor(units_long$Area, levels = c("Domain", 
                                                       "Computer Science",
                                                       "Statistics/Mathematics"))
 
 # Plot as stacked bar plot
-units.plot.bar <- ggplot(data = units.long, mapping = aes(x = Plot.label, 
-                                                      y = Proportion,
-                                                      fill = Area)) +
-  geom_bar(stat = "identity") + 
-  coord_flip() +
-  labs(x = "Institution / Program", y = "Proportion of Major") +
-  scale_fill_manual(values = c("#D2D2D2", "#222222", "#8F8F8F")) +
-  theme_bw()
-print(units.plot.bar)
+# units_plot_bar <- ggplot(data = units_long, mapping = aes(x = Plot.label, 
+#                                                       y = Proportion,
+#                                                       fill = Area)) +
+#   geom_bar(stat = "identity") + 
+#   coord_flip() +
+#   labs(x = "Institution / Program", y = "Proportion of Major") +
+#   scale_fill_manual(values = c("#D2D2D2", "#222222", "#8F8F8F")) +
+#   theme_bw()
+# print(units_plot_bar)
 
 # Plot as parallel coordinates plot
 
@@ -88,30 +88,30 @@ print(units.plot.bar)
 # as some programs are housed across both cs and math/stats units.
 # Rectangles will need to be defined on x-axis at fractional values (i.e. 2.4, 
 # 2.6) in order for them to show up correctly
-# home.categories <- units.long[, c("Institution", "Home.unit.category", "Plot.label")]
-home.categories <- units.long[!duplicated(units.long$Plot.label), "Home.unit.category"]
-home.categories <- as.character(home.categories)
-cs.indices <- which(home.categories %in% c("cs", "cs; math_stats"))
-math.indices <- which(home.categories %in% c("cs; math_stats", "math_stats"))
-other.indices <- which(home.categories %in% c("other"))
+# home_categories <- units_long[, c("Institution", "Home.unit.category", "Plot.label")]
+home_categories <- units_long[!duplicated(units_long$Plot.label), "Home.unit.category"]
+home_categories <- as.character(home_categories)
+cs_indices <- which(home_categories %in% c("cs", "cs; math_stats"))
+math_indices <- which(home_categories %in% c("cs; math_stats", "math_stats"))
+other_indices <- which(home_categories %in% c("other"))
 
 homes <- data.frame(name = c("Computer\nScience", "Statistics/\nMathematics", "Other"),
-                    xmin = c(min(cs.indices), min(math.indices), min(other.indices)) - 0.4,
-                    xmax = c(max(cs.indices), max(math.indices), max(other.indices)) + 0.4,
+                    xmin = c(min(cs_indices), min(math_indices), min(other_indices)) - 0.4,
+                    xmax = c(max(cs_indices), max(math_indices), max(other_indices)) + 0.4,
                     fill = c("#1b9e77", "#d95f02", "#7570b3"))
 homes$label.x <- (homes$xmin + homes$xmax) / 2
 
 # Re-leveling to display in CS, Stats, Domain order in legend
-units.long$Area <- factor(units.long$Area, levels = c("Computer Science",
+units_long$Area <- factor(units_long$Area, levels = c("Computer Science",
                                                       "Statistics/Mathematics",
                                                       "Domain"))
 
 # Re-level programs by home unit, then how much CS, then Stats/math, then domain
-units.long <- units.long[order(units.long$Home.unit.category, units.long$Proportion, decreasing = c(FALSE, TRUE)), ]
-units.long$Plot.label <- factor(units.long$Plot.label,
-                                levels = unique(units.long$Plot.label))
+units_long <- units_long[order(units_long$Home.unit.category, units_long$Proportion, decreasing = c(FALSE, TRUE)), ]
+units_long$Plot.label <- factor(units_long$Plot.label,
+                                levels = unique(units_long$Plot.label))
 
-units.plot.parallel <- ggplot(data = units.long, mapping = aes(x = Plot.label,
+units_plot_parallel <- ggplot(data = units_long, mapping = aes(x = Plot.label,
                                                                y = Proportion,
                                                                group = Area,
                                                                fill = Area,
@@ -133,7 +133,11 @@ units.plot.parallel <- ggplot(data = units.long, mapping = aes(x = Plot.label,
                                    vjust = 0.5, 
                                    hjust = 1.0,
                                    size = 6))
-print(units.plot.parallel)
+# print(units_plot_parallel)
 ggsave(filename = "output/units-visualization.pdf", 
-       plot = units.plot.parallel,
+       plot = units_plot_parallel,
+       width = 15, height = 10, units = "cm")
+
+ggsave(filename = "output/units-visualization.png",
+       plot = units_plot_parallel,
        width = 15, height = 10, units = "cm")

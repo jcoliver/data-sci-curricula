@@ -7,8 +7,8 @@ rm(list = ls())
 
 ################################################################################
 # See gds-compare-01.R for selection of relevant rows from data/gds-01-tm-raw.csv
-tm.scores <- read.csv(file = "data/gds-01-tm.csv")
-jo.scores <- read.csv(file = "data/gds-02-jo.csv")
+tm.scores <- read.csv(file = "data/preliminary-scores/gds-01-tm.csv")
+jo.scores <- read.csv(file = "data/preliminary-scores/gds-02-jo.csv")
 
 # Drop the extra columns in the jo file
 jo.scores <- jo.scores[, -c(14:17)]

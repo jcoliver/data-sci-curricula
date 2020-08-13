@@ -7,8 +7,8 @@ rm(list = ls())
 
 ################################################################################
 # See na-compare-01.R for selection of relevant rows from data/na-01-tm-raw.csv
-tm.scores <- read.csv(file = "data/na-01-tm.csv")
-jo.scores <- read.csv(file = "data/na-02-jo.csv")
+tm.scores <- read.csv(file = "data/preliminary-scores/na-01-tm.csv")
+jo.scores <- read.csv(file = "data/preliminary-scores/na-02-jo.csv")
 
 # Sort the data.frames to ensure same order
 tm.scores <- tm.scores[order(tm.scores$Institution, tm.scores$Program), ]

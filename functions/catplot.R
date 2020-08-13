@@ -7,9 +7,11 @@ catplot <- function(framework = c("na", "gds"), plot_height_mod = 1) {
     stop("catplot requires tidyverse package, which could not be loaded.")
   }
   
-  score_file <- paste0("data/", framework, "-scores.csv")
+  score_file <- paste0("data/scores-", framework, ".csv")
+  # score_file <- paste0("data/", framework, "-scores.csv")
   scores <- read.csv(file = score_file, stringsAsFactors = FALSE)
-  areas_file <- paste0("data/", framework, "-areas-key.csv")
+  areas_file <- paste0("data/areas-key-", framework, ".csv")
+  # areas_file <- paste0("data/", framework, "-areas-key.csv")
   areas <- read.csv(file = areas_file, stringsAsFactors = FALSE)
   inst.names <- read.csv(file = "data/institution-names.csv", stringsAsFactors = FALSE)
   
@@ -147,4 +149,9 @@ catplot <- function(framework = c("na", "gds"), plot_height_mod = 1) {
          height = nrow(plot_labels) + plot_height_mod, 
          units = "cm")
   
+  ggsave(filename = paste0("output/scores-", framework, ".png"),
+         plot = scores_catplot,
+         width = 10,
+         height = nrow(plot_labels) + plot_height_mod, 
+         units = "cm")
 }

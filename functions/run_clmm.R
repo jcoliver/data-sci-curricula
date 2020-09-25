@@ -58,6 +58,10 @@ run_clmm <- function(framework = c("na", "gds")) {
   sink(file = output_file)
   cat("Linear mixed effects model results\n\n")
   print(summary(scores_clmm))
+  # In attempt to get omnibus test statistics, there does not seem to be 
+  # an anova.clmm, but see https://rdrr.io/cran/RVAideMemoire/src/R/Anova.clmm.R
+  # for a possible way of manually calculating this stuff
+  # print(anova(scores_clmm))
   sink()  
   
   # Run post-hoc pairwise comparisons

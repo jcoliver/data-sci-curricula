@@ -1,6 +1,14 @@
 #' Run ordinal mixed-effect model on area scores
 #' 
 #' @param framework  character vector indicating which framework to analyze
+#' 
+#' @return a list with three elements
+#' \itemize{
+#'   \item{"framework"}{the framework that was analyzed}
+#'   \item{"clmm_model"}{the model object output from \code{ordinal::clmm}}
+#'   \item{"posthoc"}{result of post-hoc comparisons from a call to 
+#'   \code{emmeans::emmeans}}
+#' }
 run_clmm <- function(framework = c("na", "gds")) {
   if(!require(tidyr)) { # Data wrangling, pivot_longer
     stop("run_clmm requires tidyr package, which could not be loaded.")
@@ -65,9 +73,9 @@ run_clmm <- function(framework = c("na", "gds")) {
   sink()  
   
   # Run post-hoc pairwise comparisons
-  scores_posthoc <- emmeans(scores_clmm,
-                            pairwise ~ Area,
-                            adjust = "Tukey")
+  scores_posthoc <- emmeans::emmeans(scores_clmm,
+                                     pairwise ~ Area,
+                                     adjust = "Tukey")
   
   # Extract pairwise comparison p-values
   scores_posthoc_df <- as.data.frame(scores_posthoc$contrasts)
@@ -151,4 +159,8 @@ run_clmm <- function(framework = c("na", "gds")) {
   write.csv(x = scores_posthoc_char, 
             file = paste0("output/", framework, "-clmm-posthoc.csv"),
             row.names = TRUE)
+  
+  return(list(framework = framework,
+              clmm_model = scores_clmm,
+              posthoc = scores_posthoc))
 }

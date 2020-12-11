@@ -8,12 +8,13 @@ catplot <- function(framework = c("na", "gds"), plot_height_mod = 1) {
   }
   
   score_file <- paste0("data/scores-", framework, ".csv")
-  # score_file <- paste0("data/", framework, "-scores.csv")
   scores <- read.csv(file = score_file, stringsAsFactors = FALSE)
+
   areas_file <- paste0("data/areas-key-", framework, ".csv")
-  # areas_file <- paste0("data/", framework, "-areas-key.csv")
   areas <- read.csv(file = areas_file, stringsAsFactors = FALSE)
-  inst.names <- read.csv(file = "data/institution-names.csv", stringsAsFactors = FALSE)
+  
+  inst.names <- read.csv(file = "data/institution-names.csv", 
+                         stringsAsFactors = FALSE)
   
   # Add also institutional data, which has value of Short.name
   scores <- merge(x = scores, y = inst.names)

@@ -3,8 +3,6 @@
 # jcoliver@email.arizona.edu
 # 2020-07-24
 
-rm(list = ls())
-
 ################################################################################
 stop("Script has already been run. Data files already cleaned up.")
 
@@ -13,7 +11,7 @@ stop("Script has already been run. Data files already cleaned up.")
 # and the Row.Type column, then update any files referring to those columns
 library(tidyverse)
 
-frameworks <- c("na", "gds")
+frameworks <- c("nasem", "gds")
 
 for (framework in frameworks) {
   score_file <- paste0("data/scores-", framework, ".csv")

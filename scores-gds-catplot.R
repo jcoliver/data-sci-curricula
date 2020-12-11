@@ -3,8 +3,6 @@
 # jcoliver@email.arizona.edu
 # 2020-06-12
 
-rm(list = ls())
-
 ################################################################################
 source(file = "functions/catplot.R")
 

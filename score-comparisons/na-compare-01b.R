@@ -3,8 +3,6 @@
 # jcoliver@email.arizona.edu
 # 2019-04-25
 
-rm(list = ls())
-
 ################################################################################
 # See na-compare-01.R for selection of relevant rows from data/na-01-tm-raw.csv
 tm.scores <- read.csv(file = "data/preliminary-scores/na-01-tm.csv")
@@ -37,10 +35,16 @@ jo.conflict <- jo.scores
 jo.conflict[, score.cols] <- jo.scores[, score.cols] * comparisons[, score.cols]
 jo.conflict[jo.conflict == 0] <- -9
 
-# Send to a CSV file that we can use for re-checking
-write.csv(x = comparisons, file = "output/na-comparisons-01b.csv", row.names = FALSE)
-write.csv(x = tm.conflict, file = "output/na-01-tm-conflicts.csv", row.names = FALSE)
-write.csv(x = jo.conflict, file = "output/na-02-jo-conflicts.csv", row.names = FALSE)
+# Send to CSV files that we can use for re-checking
+write.csv(x = comparisons, 
+          file = "output/na-comparisons-01b.csv", 
+          row.names = FALSE)
+write.csv(x = tm.conflict, 
+          file = "output/na-01-tm-conflicts.csv", 
+          row.names = FALSE)
+write.csv(x = jo.conflict, 
+          file = "output/na-02-jo-conflicts.csv", 
+          row.names = FALSE)
 
 # And for reporting purposes, also calculate the mean difference
 tm.scores.matrix <- as.matrix(tm.scores[, score.cols])

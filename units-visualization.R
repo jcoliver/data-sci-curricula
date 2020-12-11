@@ -3,8 +3,6 @@
 # jcoliver@email.arizona.edu
 # 2019-06-07
 
-rm(list = ls())
-
 ################################################################################
 library(tidyverse)
 
@@ -36,7 +34,6 @@ units_df$Stats <- (units_df$Stats.min + units_df$Stats.max) / 2
 units_df$CS <- (units_df$CS.min + units_df$CS.max) / 2
 units_df$Domain <- (units_df$Domain.min + units_df$Domain.max) / 2
 units_df$Total <- (units_df$Major.min + units_df$Major.max) / 2
-# units_df$Total <- units_df$Stats + units_df$CS + units_df$Domain
 
 # Calculate values as proportion of total units/hours for major
 units_df$Stats.prop <- units_df$Stats / units_df$Total
@@ -45,8 +42,10 @@ units_df$Domain.prop <- units_df$Domain / units_df$Total
 
 # Transform to long format for plotting
 units_long <- units_df %>%
-  select(Institution, Program, Short.name, Stats.prop, CS.prop, Domain.prop, Program.Abbr, Home.unit.category) %>%
-  gather(key = "Area", value = "Proportion", -Institution, -Program, -Short.name, -Program.Abbr, -Home.unit.category)
+  select(Institution, Program, Short.name, Stats.prop, CS.prop, Domain.prop, 
+         Program.Abbr, Home.unit.category) %>%
+  gather(key = "Area", value = "Proportion", -Institution, -Program, 
+         -Short.name, -Program.Abbr, -Home.unit.category)
 
 # Make Area values a little more human readable
 units_long$Area <- gsub(pattern = ".prop", replacement = "", units_long$Area)
@@ -58,7 +57,8 @@ units_long$Area <- gsub(pattern = "CS",
                         units_long$Area)
 
 # Making additional field for plot labels
-units_long$Plot.label <- paste0(units_long$Short.name, "\n", units_long$Program.Abbr)
+units_long$Plot.label <- paste0(units_long$Short.name, "\n", 
+                                units_long$Program.Abbr)
 
 # Relevel Plot.label so they are ordered by the category of the home department
 units_long <- units_long[order(units_long$Home.unit.category, units_long$Institution), ]
@@ -70,25 +70,8 @@ units_long$Area <- factor(units_long$Area, levels = c("Domain",
                                                       "Computer Science",
                                                       "Statistics/Mathematics"))
 
-# Plot as stacked bar plot
-# units_plot_bar <- ggplot(data = units_long, mapping = aes(x = Plot.label, 
-#                                                       y = Proportion,
-#                                                       fill = Area)) +
-#   geom_bar(stat = "identity") + 
-#   coord_flip() +
-#   labs(x = "Institution / Program", y = "Proportion of Major") +
-#   scale_fill_manual(values = c("#D2D2D2", "#222222", "#8F8F8F")) +
-#   theme_bw()
-# print(units_plot_bar)
-
-# Plot as parallel coordinates plot
-
-# Figure out rectangles for indicating home department there will need to be 
-# three rectangles: cs, math/stats, other. The first two will have some overlap
-# as some programs are housed across both cs and math/stats units.
-# Rectangles will need to be defined on x-axis at fractional values (i.e. 2.4, 
-# 2.6) in order for them to show up correctly
-# home_categories <- units_long[, c("Institution", "Home.unit.category", "Plot.label")]
+# Plot as parallel coordinates plot, with shaded rectangles indicating home 
+# department/college
 home_categories <- units_long[!duplicated(units_long$Plot.label), "Home.unit.category"]
 home_categories <- as.character(home_categories)
 cs_indices <- which(home_categories %in% c("cs", "cs; math_stats"))

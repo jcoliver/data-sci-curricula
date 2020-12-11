@@ -2,7 +2,7 @@
 #' 
 #' @param framework        character vector indicating which framework to plot
 #' @param plot_height_mod  integer height modifier for resultant output file
-catplot <- function(framework = c("na", "gds"), plot_height_mod = 1) {
+catplot <- function(framework = c("nasem", "gds"), plot_height_mod = 1) {
   if (!require(tidyverse)) {
     stop("catplot requires tidyverse package, which could not be loaded.")
   }

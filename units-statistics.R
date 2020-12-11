@@ -3,9 +3,9 @@
 # jcoliver@email.arizona.edu
 # 2020-03-27
 
-rm(list = ls())
-
 ################################################################################
+library(tidyverse)
+
 # Summary statistics and statistical test comparing units among programs
 # Provides mean proportion of CS, math/stats, and domain units and addresses 
 # two questions:
@@ -13,8 +13,6 @@ rm(list = ls())
 # computer science courses than programs housed in other units?
 # 2. Do programs housed in Statistics units have a higher proportion of 
 # stats/math courses than programs housed in other units?
-
-library(tidyverse)
 
 units.df <- read.csv(file = "data/units.csv")
 programs <- read.csv(file = "data/programs.csv")

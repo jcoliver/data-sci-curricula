@@ -9,7 +9,7 @@
 #'   \item{"posthoc"}{result of post-hoc comparisons from a call to 
 #'   \code{emmeans::emmeans}}
 #' }
-run_clmm <- function(framework = c("na", "gds")) {
+run_clmm <- function(framework = c("nasem", "gds")) {
   if(!require(tidyr)) { # Data wrangling, pivot_longer
     stop("run_clmm requires tidyr package, which could not be loaded.")
   }
@@ -24,10 +24,9 @@ run_clmm <- function(framework = c("na", "gds")) {
   }
   
   score_file <- paste0("data/scores-", framework, ".csv")
-  # score_file <- paste0("data/", framework, "-scores.csv")
   scores <- read.csv(file = score_file, stringsAsFactors = FALSE)
+
   areas_file <- paste0("data/areas-key-", framework, ".csv")
-  # areas_file <- paste0("data/", framework, "-areas-key.csv")
   areas <- read.csv(file = areas_file, stringsAsFactors = FALSE)
   
   # Convert scores to long

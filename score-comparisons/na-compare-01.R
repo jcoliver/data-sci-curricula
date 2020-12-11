@@ -3,8 +3,6 @@
 # jcoliver@email.arizona.edu
 # 2019-04-01
 
-rm(list = ls())
-
 ################################################################################
 # Before reading in tm scores, need to drop all rows that aren't the 
 # 4-point scale code (using just column names from JO scoresheet)
@@ -37,7 +35,9 @@ comparisons[, score.cols] <- tm.scores[, score.cols] == jo.scores[, score.cols]
 # tm.scores.diff[, score.cols]
 
 # Send to a CSV file that we can use for re-checking
-write.csv(x = comparisons, file = "output/na-comparisons-01.csv", row.names = FALSE)
+write.csv(x = comparisons, 
+          file = "output/na-comparisons-01.csv", 
+          row.names = FALSE)
 
 # And for reporting purposes, also calculate the mean difference
 tm.scores.matrix <- as.matrix(tm.scores[, score.cols])

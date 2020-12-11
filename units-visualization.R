@@ -116,6 +116,11 @@ units_plot_parallel <- ggplot(data = units_long, mapping = aes(x = Plot.label,
                                    vjust = 0.5, 
                                    hjust = 1.0,
                                    size = 6))
+
+if (!dir.exists(paths = "output")) {
+  dir.create("output")
+}
+
 # print(units_plot_parallel)
 ggsave(filename = "output/units-visualization.pdf", 
        plot = units_plot_parallel,

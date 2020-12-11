@@ -11,3 +11,5 @@ source(file = "functions/run_clmm.R")
 framework <- "nasem"
 
 run_clmm(framework = framework)
+
+rm(framework)

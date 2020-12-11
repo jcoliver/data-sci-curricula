@@ -76,7 +76,12 @@ cs.t <- t.test(x = units.df$CS.prop[units.df$CS.home],
 stat.t <- t.test(x = units.df$Stats.prop[units.df$Stats.home],
                  y = units.df$Stats.prop[!units.df$Stats.home],
                  alternative = "greater")
+
 # Write outputs to file
+if (!dir.exists(paths = "output")) {
+  dir.create("output")
+}
+
 sink(file = "output/units-statistics.txt")
 cat("Summary statistics", "\n")
 summary.stats

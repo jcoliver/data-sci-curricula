@@ -57,6 +57,10 @@ catplot <- function(framework = c("nasem", "gds"), plot_height_mod = 1) {
   area_stats$area <- factor(x = area_stats$area,
                             levels = area_levels)
   
+  if (!dir.exists(paths = "output")) {
+    dir.create("output")
+  }
+  
   # Write the summary stats to a file while we are here
   write.csv(x = area_stats, 
             file = paste0("output/summary-stats-", framework, ".csv"),

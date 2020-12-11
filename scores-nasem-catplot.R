@@ -11,3 +11,5 @@ plot_height_mod <- 1
 
 catplot(framework = framework, 
         plot_height_mod = plot_height_mod)
+
+rm(framework, plot_height_mod)

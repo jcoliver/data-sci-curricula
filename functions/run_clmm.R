@@ -59,7 +59,10 @@ run_clmm <- function(framework = c("nasem", "gds")) {
                                data = scores_long,
                                threshold = "equidistant") 
   
-  
+  if (!dir.exists(paths = "output")) {
+    dir.create("output")
+  }
+
   # Write model results to file
   output_file <- paste0("output/", framework, "-clmm.txt")
   sink(file = output_file)

@@ -136,8 +136,6 @@ catplot <- function(framework = c("nasem", "gds"), plot_height_mod = 1) {
                size = 3.5) +
       ylim(c(0.5, 4)) # Need to add space if we add letters
     
-  } else {
-    message("Could not find file for adding post-hoc letters to plot")
   }
   
   # Some final theming for the figure

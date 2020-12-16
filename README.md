@@ -9,10 +9,12 @@ Science" (2017).
 
 The analyses and visualizations require the following packages:
 
-+ dplyr
++ dplyr (part of tidyverse)
 + emmeans
++ ggplot2 (part of tidyverse)
 + ordinal
-+ tidyr
++ stringr (part of tidyverse)
++ tidyr (part of tidyverse)
 + tidyverse
 
 ## Workflow

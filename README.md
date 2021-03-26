@@ -3,7 +3,10 @@
 An investigation of how undergraduate data science programs perform against two 
 data science frameworks, the National Academies' "Data Science for 
 Undergraduates Opportunities and Options" (2018) and Donoho's "Greater Data
-Science" (2017).
+Science" (2017). This work is published in _PeerJ Computer Science_ under the 
+title "Undergraduate data science degrees emphasize computer science and 
+statistics but fall short in ethics training and domain-specific context" 
+[10.7717/peerj-cs.441](https://doi.org/10.7717/peerj-cs.441).
 
 ## Dependencies
 
